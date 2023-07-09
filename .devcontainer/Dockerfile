@@ -25,8 +25,10 @@ RUN apt-get update \
         libgmp-dev \
         libnuma-dev \
         libtinfo-dev \
+        python3-pip \
         zlib1g-dev \
     && apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+RUN pip install pre-commit
 
 # Install latest GHCup in the non-root user home
 USER $USERNAME
