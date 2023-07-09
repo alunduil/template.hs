@@ -1,0 +1,33 @@
+{
+  "name": "template.hs",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+
+  // Features to add to the dev container. More info: https://containers.dev/features.
+
+  // Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "",
+
+  // Configure tool-specific properties.
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "haskell.manageHLS": "GHCup"
+      },
+      "extensions": [
+				"DavidAnson.vscode-markdownlint",
+				"eamodio.gitlens",
+ 				"GitHub.vscode-pull-request-github",
+        "haskell.haskell",
+				"ms-azuretools.vscode-docker"
+      ]
+    }
+  },
+
+  // Comment out to connect as root instead. To add a non-root user, see: https://aka.ms/vscode-remote/containers/non-root.
+  "remoteUser": "vscode"
+}
