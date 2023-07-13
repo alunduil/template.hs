@@ -1,6 +1,7 @@
 cabal-version:      2.4
 name:               templatise
 version:            0.1.0.0
+tested-with: GHC >=8.10 && <10
 
 license: Unlicense
 license-file: LICENSE
