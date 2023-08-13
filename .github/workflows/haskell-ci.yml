@@ -8,9 +8,9 @@
 #
 # For more information, see https://github.com/haskell-CI/haskell-ci
 #
-# version: 0.16.3
+# version: 0.16.6
 #
-# REGENDATA ("0.16.3",["github","--haddock","--hlint","templatise.cabal"])
+# REGENDATA ("0.16.6",["github","--haddock","--hlint","templatise.cabal"])
 #
 name: Haskell-CI
 on:
@@ -61,6 +61,11 @@ jobs:
           - compiler: ghc-9.4.1
             compilerKind: ghc
             compilerVersion: 9.4.1
+            setup-method: ghcup
+            allow-failure: false
+          - compiler: ghc-9.2.8
+            compilerKind: ghc
+            compilerVersion: 9.2.8
             setup-method: ghcup
             allow-failure: false
           - compiler: ghc-9.2.7
@@ -315,7 +320,7 @@ jobs:
           $CABAL v2-build $ARG_COMPILER $ARG_TESTS $ARG_BENCH all --write-ghc-environment-files=always
       - name: hlint
         run: |
-          if [ $((HCNUMVER >= 90602)) -ne 0 ] ; then (cd ${PKGDIR_templatise} && hlint -XHaskell2010 src/initialise) ; fi
+          if [ $((HCNUMVER >= 90602)) -ne 0 ] ; then (cd ${PKGDIR_templatise} && hlint -XHaskell2010 initialise) ; fi
       - name: cabal check
         run: |
           cd ${PKGDIR_templatise} || false

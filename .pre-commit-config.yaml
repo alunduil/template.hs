@@ -14,7 +14,24 @@ repos:
       - id: destroyed-symlinks
       - id: end-of-file-fixer
       - id: trailing-whitespace
-  - repo: https://github.com/doublify/pre-commit-hindent
-    rev: b3680b6ebf9f7cf29b19307f246adef66756feef
+  - repo: local
     hooks:
-    - id: hindent
+      - id: haskell-ci regenerate
+        name: haskell-ci regenerate
+        entry: haskell-ci regenerate
+        language: system
+        files: '\.cabal$'
+        types: ["file", "text"]
+        pass_filenames: false
+      - id: hlint
+        name: hlint
+        entry: hlint
+        language: system
+        types: ["haskell", "literate-haskell"]
+      - id: cabal check
+        name: cabal check
+        entry: cabal check
+        language: system
+        files: '/.cabal$'
+        types: ["file", "text"]
+        pass_filenames: false

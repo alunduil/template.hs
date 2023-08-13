@@ -1,10 +1,14 @@
 {
   "name": "template.hs",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
 
   // Features to add to the dev container. More info: https://containers.dev/features.
+  "features": {
+    "ghcr.io/devcontainers-contrib/features/haskell:2": {"globalPackages": "haskell-ci hlint"},
+    "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
+		"ghcr.io/devcontainers/features/git:1": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
+  },
 
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": [],
@@ -19,12 +23,13 @@
         "haskell.manageHLS": "GHCup"
       },
       "extensions": [
-				"DavidAnson.vscode-markdownlint",
-				"eamodio.gitlens",
- 				"GitHub.vscode-pull-request-github",
+		    "DavidAnson.vscode-markdownlint",
+        "eamodio.gitlens",
+        "github.vscode-github-actions",
+        "GitHub.vscode-pull-request-github",
         "haskell.haskell",
-				"ms-azuretools.vscode-docker"
-      ]
+        "ms-azuretools.vscode-docker"
+	]
     }
   },
 
