@@ -20,7 +20,7 @@ repos:
         name: haskell-ci regenerate
         entry: haskell-ci regenerate
         language: system
-        files: '\.cabal$'
+        files: '(^.github/workflows/haskell-ci.yml$)|(\.cabal$)'
         pass_filenames: false
       - id: hlint
         name: hlint
