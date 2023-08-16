@@ -1,6 +1,9 @@
 module Main (main) where
 
-import Project (MetaData, optionParser)
+import Configuration
+  ( MetaData,
+    optionParser,
+  )
 
 -- TODO Add logging
 

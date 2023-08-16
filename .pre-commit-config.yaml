@@ -21,30 +21,27 @@ repos:
         entry: haskell-ci regenerate
         language: system
         files: '\.cabal$'
-        types: ["file", "text"]
         pass_filenames: false
       - id: hlint
         name: hlint
         entry: hlint
         language: system
-        types: ["haskell", "literate-haskell"]
+        types_or: ["haskell", "literate-haskell"]
       - id: cabal check
         name: cabal check
         entry: cabal check
         language: system
-        files: '/.cabal$'
-        types: ["file", "text"]
+        files: '\.cabal$'
         pass_filenames: false
       - id: ormolu
         name: ormolu
         entry: ormolu
         language: system
-        types: ["haskell", "literate-haskell"]
+        types_or: ["haskell", "literate-haskell"]
         args: ["-i", "-c"]
       - id: cabal-fmt
         name: cabal-fmt
         entry: cabal-fmt
         language: system
-        files: '/.cabal$'
-        types: ["file", "text"]
+        files: '\.cabal$'
         args: ["-i"]

@@ -32,7 +32,7 @@ executable initialise
     , base                  ^>=4.16.4.0 || ^>=4.18.0.0
     , optparse-applicative  ^>=0.18.1.0
 
-  other-modules:    Project
+  other-modules:    Configuration
   hs-source-dirs:   initialise
 
   -- default-extensions:
