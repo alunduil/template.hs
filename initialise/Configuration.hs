@@ -4,20 +4,24 @@ module Configuration
   )
 where
 
+import Data.Maybe (maybe)
 import Options.Applicative
   ( Parser,
+    auto,
     help,
     long,
     metavar,
+    option,
     short,
     showDefault,
     strOption,
+    value,
   )
 
-newtype MetaData = MetaData {name :: String}
+data MetaData = MetaData {name :: String, author :: String}
 
-optionParser :: Parser MetaData
-optionParser =
+optionParser :: Maybe String -> Parser MetaData
+optionParser author =
   MetaData
     <$> strOption
       ( short 'n'
@@ -26,3 +30,13 @@ optionParser =
           <> showDefault
           <> metavar "NAME"
       )
+    <*> let ms =
+              ( long "author"
+                  <> help "Name of the author of the project."
+                  <> metavar "AUTHOR"
+              )
+            withValue a =
+              ms
+                <> value a
+                <> showDefault
+         in strOption $ maybe ms withValue author

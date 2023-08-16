@@ -30,14 +30,19 @@ executable initialise
   main-is:          Main.hs
   build-depends:
     , base                  ^>=4.16.4.0 || ^>=4.18.0.0
+    , extra                 ^>=1.7.14
     , optparse-applicative  ^>=0.18.1.0
+    , process               ^>=1.6.17.0
 
-  other-modules:    Configuration
+  other-modules:
+    Configuration
+    Git
+
   hs-source-dirs:   initialise
 
   -- default-extensions:
   -- other-extensions:
   default-language: Haskell2010
 
--- build-tool-depends:
--- ghc-options:
+  -- build-tool-depends:
+  ghc-options:      -threaded
