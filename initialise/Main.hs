@@ -20,12 +20,13 @@ import Options.Applicative
 main :: IO ()
 main = do
   author <- Git.config "user.name"
-  metadata <- execParser $ options author
+  maintainer <- Git.config "user.email"
+  metadata <- execParser $ options author maintainer
   pure ()
   where
-    options author =
+    options author maintainer =
       info
-        (optionParser author <**> helper)
+        (optionParser author maintainer <**> helper)
         ( fullDesc
             <> progDesc "Initialise a new project using the current checked out repository."
             <> header "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
