@@ -35,3 +35,16 @@ repos:
         files: '/.cabal$'
         types: ["file", "text"]
         pass_filenames: false
+      - id: ormolu
+        name: ormolu
+        entry: ormolu
+        language: system
+        types: ["haskell", "literate-haskell"]
+        args: ["-i", "-c"]
+      - id: cabal-fmt
+        name: cabal-fmt
+        entry: cabal-fmt
+        language: system
+        files: '/.cabal$'
+        types: ["file", "text"]
+        args: ["-i"]
