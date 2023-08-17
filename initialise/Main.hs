@@ -1,4 +1,4 @@
-module Main (main) where
+module Main (main, main') where
 
 import Configuration
   ( MetaData,
@@ -27,9 +27,7 @@ main = do
   maintainer <- Git.config "user.email"
   path <- getCurrentDirectory
 
-  metadata <- execParser $ options name author maintainer path
-
-  pure ()
+  execParser (options name author maintainer path) >>= main'
   where
     options name author maintainer path =
       info
@@ -45,3 +43,6 @@ main = do
 
     toName :: Maybe String -> Maybe String
     toName origin = takeBaseName . uriPath <$> (parseURI =<< origin)
+
+main' :: MetaData -> IO ()
+main' metadata = pure ()
