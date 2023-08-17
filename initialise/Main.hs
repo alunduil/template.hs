@@ -44,5 +44,4 @@ main = do
         )
 
     toName :: Maybe String -> Maybe String
-    toName (Just origin) = takeBaseName . uriPath <$> parseURI origin
-    toName Nothing = Nothing
+    toName origin = takeBaseName . uriPath <$> (parseURI =<< origin)
