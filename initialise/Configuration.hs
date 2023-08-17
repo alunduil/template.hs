@@ -9,6 +9,8 @@ import Options.Applicative
   ( Parser,
     auto,
     help,
+    hidden,
+    internal,
     long,
     metavar,
     option,
@@ -21,12 +23,16 @@ import Options.Applicative
 data MetaData = MetaData
   { name :: String,
     author :: String,
-    maintainer :: String
+    maintainer :: String,
+    licence :: String,
+    path :: FilePath
   }
 
-optionParser :: Maybe String -> Maybe String -> Parser MetaData
-optionParser author maintainer =
-  MetaData <$> name' <*> author' <*> maintainer'
+-- TODO prompt for name and licence.
+
+optionParser :: Maybe String -> Maybe String -> FilePath -> Parser MetaData
+optionParser author maintainer path =
+  MetaData <$> name' <*> author' <*> maintainer' <*> licence' <*> path'
   where
     name' =
       strOption
@@ -52,3 +58,25 @@ optionParser author maintainer =
             )
           withValue m = ms <> value m <> showDefault
        in strOption $ maybe ms withValue maintainer
+    licence' =
+      strOption
+        ( long "licence"
+            <> help "Licence of the project."
+            <> value "unlicence"
+            <> showDefault
+            <> metavar "LICENCE"
+        )
+    path' =
+      option
+        auto
+        ( long "path"
+            <> help "Project path.  Only used for testing."
+            <> value path
+            <> showDefault
+            <> metavar "PATH"
+            <> hidden
+            <> internal
+        )
+
+projectName :: String -> String
+projectName original = undefined

@@ -14,6 +14,7 @@ import Options.Applicative
     progDesc,
     (<**>),
   )
+import System.Directory.Extra (getCurrentDirectory)
 
 -- TODO Add logging
 
@@ -21,13 +22,20 @@ main :: IO ()
 main = do
   author <- Git.config "user.name"
   maintainer <- Git.config "user.email"
-  metadata <- execParser $ options author maintainer
+  path <- getCurrentDirectory
+
+  metadata <- execParser $ options author maintainer path
+
   pure ()
   where
-    options author maintainer =
+    options author maintainer path =
       info
-        (optionParser author maintainer <**> helper)
+        (optionParser author maintainer path <**> helper)
         ( fullDesc
-            <> progDesc "Initialise a new project using the current checked out repository."
-            <> header "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
+            <> progDesc
+              ( unlines
+                  [ "Initialise a new project using the current checked out repository.",
+                    "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
+                  ]
+              )
         )
