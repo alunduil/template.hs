@@ -5,6 +5,7 @@ import Configuration
     optionParser,
   )
 import qualified Git (config)
+import Network.URI (URI (uriPath), parseURI)
 import Options.Applicative
   ( execParser,
     fullDesc,
@@ -15,22 +16,24 @@ import Options.Applicative
     (<**>),
   )
 import System.Directory.Extra (getCurrentDirectory)
+import System.FilePath (takeBaseName)
 
 -- TODO Add logging
 
 main :: IO ()
 main = do
+  name <- toName <$> Git.config "remote.origin.url"
   author <- Git.config "user.name"
   maintainer <- Git.config "user.email"
   path <- getCurrentDirectory
 
-  metadata <- execParser $ options author maintainer path
+  metadata <- execParser $ options name author maintainer path
 
   pure ()
   where
-    options author maintainer path =
+    options name author maintainer path =
       info
-        (optionParser author maintainer path <**> helper)
+        (optionParser name author maintainer path <**> helper)
         ( fullDesc
             <> progDesc
               ( unlines
@@ -39,3 +42,7 @@ main = do
                   ]
               )
         )
+
+    toName :: Maybe String -> Maybe String
+    toName (Just origin) = takeBaseName . uriPath <$> parseURI origin
+    toName Nothing = Nothing
