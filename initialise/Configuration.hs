@@ -30,18 +30,19 @@ data MetaData = MetaData
 
 -- TODO prompt for name and licence.
 
-optionParser :: Maybe String -> Maybe String -> FilePath -> Parser MetaData
-optionParser author maintainer path =
+optionParser :: Maybe String -> Maybe String -> Maybe String -> FilePath -> Parser MetaData
+optionParser name author maintainer path =
   MetaData <$> name' <*> author' <*> maintainer' <*> licence' <*> path'
   where
     name' =
-      strOption
-        ( short 'n'
-            <> long "project-name"
-            <> help "Name of the new project."
-            <> showDefault
-            <> metavar "NAME"
-        )
+      let ms =
+            ( short 'n'
+                <> long "project-name"
+                <> help "Name of the new project."
+                <> metavar "NAME"
+            )
+          withValue n = ms <> value n <> showDefault
+       in strOption $ maybe ms withValue name
     author' =
       let ms =
             ( long "author"
@@ -77,6 +78,3 @@ optionParser author maintainer path =
             <> hidden
             <> internal
         )
-
-projectName :: String -> String
-projectName original = undefined
