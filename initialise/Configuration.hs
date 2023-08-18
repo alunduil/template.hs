@@ -1,6 +1,5 @@
 module Configuration
   ( MetaData (..),
-    toTemplate,
     optionParser,
   )
 where
@@ -28,11 +27,6 @@ data MetaData = MetaData
     licence :: String,
     path :: FilePath
   }
-
-data Template
-
-toTemplate :: MetaData -> Template
-toTemplate metadata = undefined
 
 -- TODO prompt licence.
 
@@ -69,7 +63,7 @@ optionParser name author maintainer path =
       strOption
         ( long "licence"
             <> help "Licence of the project."
-            <> value "unlicence"
+            <> value "Unlicence"
             <> showDefault
             <> metavar "LICENCE"
         )
