@@ -30,30 +30,31 @@ main = do
   maintainer <- Git.config "user.email"
   path <- getCurrentDirectory
 
-  execParser (options name author maintainer path) >>= main'
-  where
-    options name author maintainer path =
-      info
-        (optionParser name author maintainer path <**> helper)
-        ( fullDesc
-            <> progDesc
-              ( unlines
-                  [ "Initialise a new project using the current checked out repository.",
-                    "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
-                  ]
-              )
-        )
+  let options =
+        info
+          (optionParser name author maintainer path <**> helper)
+          ( fullDesc
+              <> progDesc
+                ( unlines
+                    [ "Initialise a new project using the current checked out repository.",
+                      "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
+                    ]
+                )
+          )
 
+  execParser options >>= main'
+  where
     toName :: Maybe String -> Maybe String
     toName origin = takeBaseName . uriPath <$> (parseURI =<< origin)
 
 main' :: MetaData -> IO ()
 main' metadata = do
   convertLicence metadata (path metadata </> "LICENSE")
+  -- TODO Cabal source-dirs need converting.  Put it in convertCabal?
   convertCabal metadata (path metadata </> "templatise.cabal")
-
-  let files = [path metadata </> ".devcontainer" </> "devcontainer.json"]
-
   forM_ files $ convertFile metadata
-
--- TODO Cabal source-dirs need converting.  Put it in convertCabal?
+  where
+    files =
+      [ path metadata </> ".devcontainer" </> "devcontainer.json",
+        path metadata </> "CHANGELOG.md"
+      ]
