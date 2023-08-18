@@ -1,9 +1,12 @@
 module Main (main, main') where
 
+import Actions (convertCabal, convertFile, convertLicence)
 import Configuration
-  ( MetaData,
+  ( MetaData (path),
     optionParser,
+    toTemplate,
   )
+import Control.Monad (forM_)
 import qualified Git (config)
 import Network.URI (URI (uriPath), parseURI)
 import Options.Applicative
@@ -16,7 +19,7 @@ import Options.Applicative
     (<**>),
   )
 import System.Directory.Extra (getCurrentDirectory)
-import System.FilePath (takeBaseName)
+import System.FilePath (takeBaseName, (</>))
 
 -- TODO Add logging
 
@@ -45,4 +48,12 @@ main = do
     toName origin = takeBaseName . uriPath <$> (parseURI =<< origin)
 
 main' :: MetaData -> IO ()
-main' metadata = pure ()
+main' metadata = do
+  convertLicence metadata (path metadata </> "LICENSE")
+  convertCabal metadata (path metadata </> "templatise.cabal")
+
+  let files = [path metadata </> ".devcontainer" </> "devcontainer.json"]
+
+  forM_ files $ convertFile metadata
+
+-- TODO Cabal source-dirs need converting.  Put it in convertCabal?

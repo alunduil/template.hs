@@ -1,5 +1,6 @@
 module Configuration
   ( MetaData (..),
+    toTemplate,
     optionParser,
   )
 where
@@ -28,7 +29,12 @@ data MetaData = MetaData
     path :: FilePath
   }
 
--- TODO prompt for name and licence.
+data Template
+
+toTemplate :: MetaData -> Template
+toTemplate metadata = undefined
+
+-- TODO prompt licence.
 
 optionParser :: Maybe String -> Maybe String -> Maybe String -> FilePath -> Parser MetaData
 optionParser name author maintainer path =
