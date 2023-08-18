@@ -1,14 +1,10 @@
 module Licence (convert) where
 
 import Configuration (MetaData (..))
-import Control.Monad.Extra (pureIf)
 import Data.ByteString.Lazy (ByteString, writeFile)
-import Data.Maybe (fromJust)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
-import Network.HTTP.Client (responseBody, urlEncodedBody)
-import Network.HTTP.Simple (httpLBS, parseRequest, setRequestResponseTimeout)
-import Network.URI (escapeURIString, isUnescapedInURI)
-import Text.HTML.TagSoup (fromTagText, isTagText, parseTags, (~/=))
+import Network.HTTP.Client (responseBody)
+import Network.HTTP.Simple (httpLBS, parseRequest)
 import Prelude hiding (writeFile)
 
 convert :: MetaData -> FilePath -> IO ()
