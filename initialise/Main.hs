@@ -1,13 +1,13 @@
 module Main (main, main') where
 
-import Actions (convertCabal, convertFile, convertLicence)
+import Actions (convertCabal, convertFile)
 import Configuration
   ( MetaData (path),
     optionParser,
-    toTemplate,
   )
 import Control.Monad (forM_)
 import qualified Git (config)
+import qualified Licence (convert)
 import Network.URI (URI (uriPath), parseURI)
 import Options.Applicative
   ( execParser,
@@ -49,7 +49,7 @@ main = do
 
 main' :: MetaData -> IO ()
 main' metadata = do
-  convertLicence metadata (path metadata </> "LICENSE")
+  Licence.convert metadata (path metadata </> "LICENSE")
   -- TODO Cabal source-dirs need converting.  Put it in convertCabal?
   convertCabal metadata (path metadata </> "templatise.cabal")
   forM_ files $ convertFile metadata

@@ -1,28 +1,22 @@
-module Licence (text) where
+module Licence (convert) where
 
-import Configuration (MetaData (name))
+import Configuration (MetaData (..))
 import Control.Monad.Extra (pureIf)
-import Data.ByteString.Lazy (ByteString)
+import Data.ByteString.Lazy (ByteString, writeFile)
 import Data.Maybe (fromJust)
-import Network.HTTP.Client (responseBody)
+import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
+import Network.HTTP.Client (responseBody, urlEncodedBody)
 import Network.HTTP.Simple (httpLBS, parseRequest, setRequestResponseTimeout)
 import Network.URI (escapeURIString, isUnescapedInURI)
 import Text.HTML.TagSoup (fromTagText, isTagText, parseTags, (~/=))
+import Prelude hiding (writeFile)
 
-text :: String -> IO String
-text name = fromJust . extract <$> download name
+convert :: MetaData -> FilePath -> IO ()
+convert MetaData {licence = Unlicense} _path = pure ()
+-- TODO Fill in LICENCE template values (i.e., <year>)
+convert MetaData {licence = licence} path = writeFile path =<< text licence
 
-download :: String -> IO ByteString
-download name = do
-  request <-
-    setRequestResponseTimeout 60
-      <$> parseRequest
-      $ "https://opensource.org/licenses/" ++ escapeURIString isUnescapedInURI name
+text :: LicenseId -> IO ByteString
+text licence = do
+  request <- parseRequest $ "https://spdx.org/licenses/" ++ licenseId licence ++ ".txt"
   responseBody <$> httpLBS request
-
-extract :: ByteString -> Maybe ByteString
-extract html = pureIf (not $ null result) $ head result
-  where
-    tags = parseTags html
-    selector t = (t ~/= "<div id=LicenseText>") || (t ~/= "<article>")
-    result = map fromTagText $ filter isTagText $ filter selector tags

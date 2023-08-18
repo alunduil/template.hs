@@ -1,11 +1,9 @@
-module Actions (convertLicence, convertCabal, convertFile) where
+module Actions (convertCabal, convertFile) where
 
-import Configuration (MetaData)
-import Licence (text)
-
-convertLicence :: MetaData -> FilePath -> IO ()
-convertLicence MetaData {licence = "Unlicense"} _path = pure ()
-convertLicence MetaData {licence = licence} path = writeFile path $ text licence
+import Configuration (MetaData (..))
+import Data.ByteString.Lazy (writeFile)
+import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
+import Prelude hiding (writeFile)
 
 convertCabal :: MetaData -> FilePath -> IO ()
 convertCabal metadata cabal = undefined

@@ -5,6 +5,7 @@ module Configuration
 where
 
 import Data.Maybe (maybe)
+import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
 import Options.Applicative
   ( Parser,
     auto,
@@ -24,11 +25,9 @@ data MetaData = MetaData
   { name :: String,
     author :: String,
     maintainer :: String,
-    licence :: String,
+    licence :: LicenseId,
     path :: FilePath
   }
-
--- TODO prompt licence.
 
 optionParser :: Maybe String -> Maybe String -> Maybe String -> FilePath -> Parser MetaData
 optionParser name author maintainer path =
@@ -60,10 +59,11 @@ optionParser name author maintainer path =
           withValue m = ms <> value m <> showDefault
        in strOption $ maybe ms withValue maintainer
     licence' =
-      strOption
+      option
+        auto
         ( long "licence"
             <> help "Licence of the project."
-            <> value "Unlicence"
+            <> value Unlicense
             <> showDefault
             <> metavar "LICENCE"
         )
