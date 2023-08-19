@@ -1,11 +1,14 @@
 module Main (main, main') where
 
-import Actions (convertCabal, convertFile)
+import qualified Cabal (convert)
 import Configuration
   ( MetaData (path),
     optionParser,
   )
 import Control.Monad (forM_)
+import Data.Time (UTCTime (utctDay), toGregorian)
+import Data.Time.Clock (getCurrentTime)
+import qualified File (convert)
 import qualified Git (config)
 import qualified Licence (convert)
 import Network.URI (URI (uriPath), parseURI)
@@ -19,20 +22,21 @@ import Options.Applicative
     (<**>),
   )
 import System.Directory.Extra (getCurrentDirectory)
-import System.FilePath (takeBaseName, (</>))
+import System.FilePath (dropExtension, takeBaseName, (</>))
 
 -- TODO Add logging
 
 main :: IO ()
 main = do
-  name <- toName <$> Git.config "remote.origin.url"
+  origin <- Git.config "remote.origin.url"
   author <- Git.config "user.name"
   maintainer <- Git.config "user.email"
   path <- getCurrentDirectory
+  (year, _month, _day) <- toGregorian . utctDay <$> getCurrentTime
 
   let options =
         info
-          (optionParser name author maintainer path <**> helper)
+          (optionParser origin author maintainer path year <**> helper)
           ( fullDesc
               <> progDesc
                 ( unlines
@@ -51,8 +55,8 @@ main' :: MetaData -> IO ()
 main' metadata = do
   Licence.convert metadata (path metadata </> "LICENSE")
   -- TODO Cabal source-dirs need converting.  Put it in convertCabal?
-  convertCabal metadata (path metadata </> "templatise.cabal")
-  forM_ files $ convertFile metadata
+  Cabal.convert metadata (path metadata </> "templatise.cabal")
+  forM_ files $ File.convert metadata
   where
     files =
       [ path metadata </> ".devcontainer" </> "devcontainer.json",
