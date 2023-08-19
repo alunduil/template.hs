@@ -37,7 +37,7 @@ main = do
               <> progDesc
                 ( unlines
                     [ "Initialise a new project using the current checked out repository.",
-                      "WARNING: THIS WILL DESTROY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
+                      "WARNING: THIS WILL MODIFY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
                     ]
                 )
           )
