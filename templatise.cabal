@@ -61,8 +61,8 @@ executable initialise
 test-suite initialise-test
   type:             exitcode-stdio-1.0
   main-is:          Main.hs
+  build-depends:    base ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
 
-  -- build-depends:
   -- other-modules:
   hs-source-dirs:   initialise_test
 
