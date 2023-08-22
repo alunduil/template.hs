@@ -7,9 +7,11 @@ import Configuration (MetaData (..))
 import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
 import Data.ByteString (ByteString, readFile)
+import Distribution.Fields (Field, readFields)
 import Distribution.License (licenseFromSPDX)
 import Distribution.PackageDescription.Parsec (parseGenericPackageDescription, runParseResult)
 import Distribution.Parsec.Error (PError)
+import Distribution.Parsec.Position (Position)
 import Distribution.SPDX.License (License (License))
 import Distribution.SPDX.LicenseExpression (simpleLicenseExpression)
 import Distribution.Types.BuildInfo (BuildInfo (hsSourceDirs, otherModules, targetBuildDepends))
@@ -44,20 +46,20 @@ import Distribution.Types.UnqualComponentName (mkUnqualComponentName)
 import Distribution.Types.Version (mkVersion)
 import Distribution.Utils.ShortText (toShortText)
 import GHC.Base (NonEmpty)
+import Replace (replaceWith)
 import System.FilePath ((</>))
+import Text.Parsec.Error (ParseError)
 import Prelude hiding (readFile)
 
 instance Exception (NonEmpty PError)
 
-convert :: MetaData -> FilePath -> IO ()
-convert metadata cabal = do
-  modifyWith metadata <$> contents cabal
-  pure ()
+instance Exception ParseError
 
-contents :: FilePath -> IO GenericPackageDescription
-contents path = readFile path >>= parse
-  where
-    parse = either (throwM . snd) pure . snd . runParseResult . parseGenericPackageDescription
+convert :: MetaData -> FilePath -> IO ()
+convert metadata cabal = (path metadata `replaceWith`) . modifyWith metadata <$> contents cabal
+
+contents :: FilePath -> IO [Field Position]
+contents path = either throwM pure . readFields =<< readFile path
 
 class ModifyWith a where
   modifyWith :: MetaData -> a -> a
