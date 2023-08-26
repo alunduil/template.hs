@@ -1,15 +1,18 @@
 module Main (main, main') where
 
 import qualified Cabal (convert)
-import Configuration
+import qualified Configuration
   ( MetaData (path),
     optionParser,
   )
 import Control.Monad (forM_)
+import Control.Monad.Reader (ReaderT, runReaderT)
 import Data.Time (UTCTime (utctDay), toGregorian)
 import Data.Time.Clock (getCurrentTime)
+import qualified Defaults (getDefaults)
 import qualified File (convert)
 import qualified Git (config)
+import Initialise (Initialise)
 import qualified Licence (convert)
 import Network.URI (URI (uriPath), parseURI)
 import Options.Applicative
@@ -24,19 +27,13 @@ import Options.Applicative
 import System.Directory.Extra (getCurrentDirectory)
 import System.FilePath (dropExtension, takeBaseName, (</>))
 
--- TODO Add logging
-
 main :: IO ()
 main = do
-  origin <- Git.config "remote.origin.url"
-  author <- Git.config "user.name"
-  maintainer <- Git.config "user.email"
-  path <- getCurrentDirectory
-  (year, _month, _day) <- toGregorian . utctDay <$> getCurrentTime
+  defaults <- Defaults.getDefaults
 
   let options =
         info
-          (optionParser origin author maintainer path year <**> helper)
+          (Configuration.parser defaults <**> helper)
           ( fullDesc
               <> progDesc
                 ( unlines
@@ -46,19 +43,16 @@ main = do
                 )
           )
 
-  execParser options >>= main'
-  where
-    toName :: Maybe String -> Maybe String
-    toName origin = takeBaseName . uriPath <$> (parseURI =<< origin)
+  execParser options >>= runInitialise main'
 
-main' :: MetaData -> IO ()
-main' metadata = do
-  Licence.convert metadata (path metadata </> "LICENSE")
-  -- TODO Cabal source-dirs need converting.  Put it in convertCabal?
-  Cabal.convert metadata (path metadata </> "templatise.cabal")
-  forM_ files $ File.convert metadata
-  where
-    files =
-      [ path metadata </> ".devcontainer" </> "devcontainer.json",
-        path metadata </> "CHANGELOG.md"
-      ]
+main' :: Initialise ()
+main' = do
+  unlessM (Licence.is Unlicense) $ Licence.replace "LICENSE"
+  Cabal.replace "templatise.cabal"
+  mapM_
+    File.replace
+    [ ".devcontainer" </> "devcontainer.json",
+      "CHANGELOG.md"
+    ]
+
+-- TODO README

@@ -1,10 +1,7 @@
 module Git (config) where
 
-import Control.Monad.Extra (pureIf)
-import System.Exit (ExitCode (ExitSuccess))
-import System.Process (readProcessWithExitCode)
+import Data.Text (Text, pack)
+import System.Process (readProcess)
 
-config :: String -> IO (Maybe String)
-config key = do
-  (exitCode, stdout, _stderr) <- readProcessWithExitCode "git" ["config", key] ""
-  pure $ pureIf (exitCode == ExitSuccess) $ head $ lines stdout
+config :: String -> IO Text
+config key = pack . head . lines <$> readProcess "git" ["config", key] ""

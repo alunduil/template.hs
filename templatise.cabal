@@ -26,46 +26,41 @@ source-repository head
   type:     git
   location: https://github.com/alunduil/template.hs
 
-executable initialise
-  main-is:          Main.hs
+library initialise-library
+  exposed-modules:  Defaults
+  other-modules:    Git
   build-depends:
-    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
-    , Cabal                 ^>=3.6.3.0  || ^>=3.8.1.0  || ^>=3.10.1.0
-    , exceptions            ^>=0.10.7
-    , extra                 ^>=1.7.14
-    , filepath              ^>=1.4.2.2
-    , http-client           ^>=0.7.13.1
-    , http-conduit          ^>=2.3.8.3
-    , network-uri           ^>=2.6.4.1  || ^>=2.7.0.0
-    , optparse-applicative  ^>=0.18.1.0
-    , parsec                ^>=3.1.16.1
-    , process               ^>=1.6.16.0
-    , time                  ^>=1.12.2
-
-  other-modules:
-    Cabal
-    Configuration
-    File
-    Git
-    Licence
-    Replace
+    , base         ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , extra        ^>=1.7.14
+    , filepath     ^>=1.4.2.2
+    , network-uri  ^>=2.6.4.1  || ^>=2.7.0.0
+    , process      ^>=1.6.16.0
+    , text         ^>=2.0.2
+    , time         ^>=1.12.2
 
   hs-source-dirs:   initialise
 
-  -- default-extensions:
-  -- other-extensions:
+  --default-extensions:
+  --other-extensions:
   default-language: Haskell2010
 
-  -- build-tool-depends:
-  ghc-options:      -threaded
+  --build-tool-depends:
+  ghc-options:      -Wall
 
 test-suite initialise-test
   type:             exitcode-stdio-1.0
-  main-is:          Main.hs
-  build-depends:    base ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+  main-is:          Spec.hs
+  build-depends:
+    , base                ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , hspec               ^>=2.11.4
+    , initialise-library
+    , tasty               ^>=1.4.3
+    , tasty-hspec         ^>=1.2.0.4
 
-  -- other-modules:
+  other-modules:
+    DefaultsSpec
+    GitSpec
+
   hs-source-dirs:   initialise_test
 
   --default-extensions:
@@ -73,4 +68,35 @@ test-suite initialise-test
   default-language: Haskell2010
 
   -- build-tool-depends:
-  ghc-options:      -threaded
+  ghc-options:      -threaded -Wall
+
+executable initialise
+  main-is:          Main.hs
+  build-depends:
+    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
+    , Cabal                 ^>=3.6.3.0  || ^>=3.8.1.0  || ^>=3.10.1.0
+    , exceptions            ^>=0.10.7
+    , http-client           ^>=0.7.13.1
+    , http-conduit          ^>=2.3.8.3
+    , initialise-library
+    , optparse-applicative  ^>=0.18.1.0
+    , parsec                ^>=3.1.16.1
+
+  other-modules:
+    Cabal
+    Configuration
+    File
+    Git
+    Initialise
+    Licence
+    Replace
+
+  --hs-source-dirs:   initialise
+
+  -- default-extensions:
+  -- other-extensions:
+  default-language: Haskell2010
+
+  -- build-tool-depends:
+  ghc-options:      -threaded -Wall
