@@ -26,17 +26,25 @@ source-repository head
   type:     git
   location: https://github.com/alunduil/template.hs
 
-library initialise-library
-  exposed-modules:  Defaults
-  other-modules:    Git
+common initialise-common
   build-depends:
     , base         ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , extra        ^>=1.7.14
-    , filepath     ^>=1.4.2.2
     , network-uri  ^>=2.6.4.1  || ^>=2.7.0.0
-    , process      ^>=1.6.16.0
     , text         ^>=2.0.2
-    , time         ^>=1.12.2
+
+library initialise-library
+  import:           initialise-common
+  exposed-modules:
+    Defaults
+    Git
+
+  -- TODO Make Git private.
+  --other-modules:
+  build-depends:
+    , extra     ^>=1.7.14
+    , filepath  ^>=1.4.2.2
+    , process   ^>=1.6.16.0
+    , time      ^>=1.12.2
 
   hs-source-dirs:   initialise
 
@@ -48,10 +56,10 @@ library initialise-library
   ghc-options:      -Wall
 
 test-suite initialise-test
+  import:           initialise-common
   type:             exitcode-stdio-1.0
   main-is:          Spec.hs
   build-depends:
-    , base                ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
     , hspec               ^>=2.11.4
     , initialise-library
     , tasty               ^>=1.4.3
