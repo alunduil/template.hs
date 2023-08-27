@@ -1,4 +1,4 @@
-module Spec (main) where
+module Main (main) where
 
 import qualified DefaultsSpec (spec)
 import qualified GitSpec (spec)

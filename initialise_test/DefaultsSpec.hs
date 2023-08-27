@@ -33,6 +33,6 @@ spec = describe "Defaults" $ do
           { SUT.dOrigin = fromJust (parseURI "https://github.com/alunduil/template.hs.git"),
             SUT.dAuthor = "Alex Brandt",
             SUT.dMaintainer = "alunduil@gmail.com",
-            SUT.dPath = ".",
+            SUT.dPath = "/workspaces/template.hs",
             SUT.dYear = 2023
           }

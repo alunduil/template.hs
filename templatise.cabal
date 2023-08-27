@@ -58,7 +58,7 @@ library initialise-library
 test-suite initialise-test
   import:           initialise-common
   type:             exitcode-stdio-1.0
-  main-is:          Spec.hs
+  main-is:          Main.hs
   build-depends:
     , hspec               ^>=2.11.4
     , initialise-library

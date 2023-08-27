@@ -1,19 +1,18 @@
-{-# LANGUAGE OverloadedStrings #-}
-
 module GitSpec (spec) where
 
-import Data.Maybe (fromJust)
 import Data.Text (pack)
 import qualified Git as SUT
-import Network.URI (parseURI)
 import Test.Hspec (Spec, describe, it, shouldBe)
 
 spec :: Spec
 spec = describe "Git" $ do
   describe "config" $ do
-    it "gets remote.origin.url" $
-      SUT.config "remote.origin.url" `shouldBe` (pack . fromJust (parseURI "https://github.com/alunduil/template.hs.git"))
-    it "gets user.name" $
-      SUT.config "user.name" `shouldBe` "Alex Brandt"
-    it "get user.email" $
-      SUT.config "user.email" `shouldBe` "alunduil@gmail.com"
+    it "gets remote.origin.url" $ do
+      origin <- SUT.config "remote.origin.url"
+      origin `shouldBe` pack "https://github.com/alunduil/template.hs.git"
+    it "gets user.name" $ do
+      name <- SUT.config "user.name"
+      name `shouldBe` pack "Alex Brandt"
+    it "get user.email" $ do
+      email <- SUT.config "user.email"
+      email `shouldBe` pack "alunduil@gmail.com"
