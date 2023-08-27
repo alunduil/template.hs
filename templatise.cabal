@@ -35,6 +35,7 @@ common initialise-common
 library initialise-library
   import:           initialise-common
   exposed-modules:
+    Cabal
     Defaults
     Git
 
@@ -46,7 +47,7 @@ library initialise-library
     , process   ^>=1.6.16.0
     , time      ^>=1.12.2
 
-  hs-source-dirs:   initialise
+  hs-source-dirs:   lib/initialise
 
   --default-extensions:
   --other-extensions:
@@ -66,10 +67,11 @@ test-suite initialise-test
     , tasty-hspec         ^>=1.2.0.4
 
   other-modules:
+    CabalSpec
     DefaultsSpec
     GitSpec
 
-  hs-source-dirs:   initialise_test
+  hs-source-dirs:   test/initialise
 
   --default-extensions:
   -- other-extensions:
@@ -91,16 +93,15 @@ executable initialise
     , optparse-applicative  ^>=0.18.1.0
     , parsec                ^>=3.1.16.1
 
-  other-modules:
-    Cabal
-    Configuration
-    File
-    Git
-    Initialise
-    Licence
-    Replace
+  --other-modules:
+  --  Cabal
+  --  Configuration
+  --  File
+  --  Initialise
+  --  Licence
+  --  Replace
 
-  --hs-source-dirs:   initialise
+  hs-source-dirs:   bin/initialise
 
   -- default-extensions:
   -- other-extensions:
