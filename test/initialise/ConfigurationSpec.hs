@@ -1,12 +1,17 @@
-module MetaDataSpec (spec) where
+{-# LANGUAGE OverloadedStrings #-}
 
-import qualified MetaData as SUT
-import Options.Applicative (execParserPure)
-import Test.Hspec (Spec, describe, it)
+module ConfigurationSpec (spec) where
+
+import qualified Configuration as SUT
+import Data.Maybe (fromJust)
+import Defaults (Defaults (..))
+import Network.URI (parseURI)
+import Options.Applicative (defaultPrefs, execParserPure, helper, info, renderFailure, (<**>))
+import Test.Hspec (Spec, describe, it, shouldBe, shouldNotBe)
 
 spec :: Spec
 spec =
-  describe "MetaData" $ do
+  describe "Configuration" $ do
     describe "parser" $ do
       it "should error if homepage isn't a URI" $ do
         (error, exitCode) <-
@@ -27,12 +32,12 @@ spec =
         exitCode `shouldNotBe` 0
         error `shouldBe` ""
 
-defaults :: SUT.Defaults
+defaults :: Defaults
 defaults =
-  SUT.Defaults
-    { SUT.dOrigin = fromJust (parseURI "http://github.com/username/repository.git"),
-      SUT.dAuthor = "Forename Surname",
-      SUT.dMaintainer = "username@example.com",
-      SUT.dPath = ".",
-      SUT.dYear = 1970
+  Defaults
+    { dOrigin = fromJust (parseURI "http://github.com/username/repository.git"),
+      dAuthor = "Forename Surname",
+      dMaintainer = "username@example.com",
+      dPath = ".",
+      dYear = 1970
     }

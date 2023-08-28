@@ -1,82 +1,44 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE OverloadedRecordDot #-}
+{-# OPTIONS_GHC -Wno-orphans #-}
 
 module Cabal (replace, convert) where
 
+import Configuration (Configuration (name))
 import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
+import Control.Monad.Reader (asks, liftIO)
 import Data.ByteString (ByteString, readFile)
-import Distribution.Fields (Field, readFields)
-import Distribution.License (licenseFromSPDX)
-import Distribution.PackageDescription.Parsec (parseGenericPackageDescription, runParseResult)
-import Distribution.Parsec.Error (PError)
+import Data.Text (unpack)
+import Distribution.Fields (CommentPosition (NoComment), Field, fromParsecFields, readFields, showFields)
 import Distribution.Parsec.Position (Position)
-import Distribution.SPDX.License (License (License))
-import Distribution.SPDX.LicenseExpression (simpleLicenseExpression)
-import Distribution.Types.BuildInfo (BuildInfo (hsSourceDirs, otherModules, targetBuildDepends))
-import Distribution.Types.Dependency (depPkgName)
-import Distribution.Types.Executable (Executable (buildInfo, exeName, modulePath))
-import Distribution.Types.GenericPackageDescription (GenericPackageDescription (packageDescription))
-import qualified Distribution.Types.PackageDescription as PD
-  ( PackageDescription
-      ( author,
-        bugReports,
-        copyright,
-        executables,
-        homepage,
-        licenseRaw,
-        maintainer,
-        package,
-        sourceRepos,
-        testSuites
-      ),
-  )
-import Distribution.Types.PackageId (PackageIdentifier (PackageIdentifier, pkgName, pkgVersion))
-import Distribution.Types.PackageName (mkPackageName, unPackageName)
-import Distribution.Types.SourceRepo
-  ( KnownRepoType (Git),
-    RepoKind (RepoHead),
-    RepoType (KnownRepoType),
-    SourceRepo (repoLocation, repoType),
-    emptySourceRepo,
-  )
-import Distribution.Types.TestSuite (TestSuite (testBuildInfo, testName))
-import Distribution.Types.UnqualComponentName (mkUnqualComponentName)
-import Distribution.Types.Version (mkVersion)
-import Distribution.Utils.ShortText (toShortText)
-import GHC.Base (NonEmpty)
 import Initialise (Initialise)
-import System.FilePath ((</>))
+import System.Directory.Extra (removeFile)
+import System.FilePath (replaceBaseName)
 import Text.Parsec.Error (ParseError)
 import Prelude hiding (readFile)
-
-instance Exception (NonEmpty PError)
 
 instance Exception ParseError
 
 replace :: FilePath -> Initialise ()
 replace path = do
   -- TODO handle in replaceWith
-  path' <- replaceBaseName . name <$> ask
+  path' <- asks (flip replaceBaseName path . unpack . name)
   -- TODO replaceWith convert
-  liftIO (readFile path) >>= convert >>= liftIO (writeFile path')
+  contents <- liftIO $ readFile path
+  contents' <- convert contents
+  liftIO $ writeFile path' contents'
   -- TODO handle in replaceWith
   liftIO $ removeFile path
 
-convert :: Text -> Initialise Text
-convert metadata cabal = (path metadata `replaceWith`) . modifyWith metadata <$> contents cabal
+convert :: ByteString -> Initialise String
+convert contents = do
+  fs <- either throwM pure (readFields contents)
+  showFields (const NoComment) . fromParsecFields <$> convert' fs
 
-contents :: FilePath -> IO [Field Position]
-contents path = either throwM pure . readFields =<< readFile path
+convert' :: [Field Position] -> Initialise [Field Position]
+convert' fs = mapM_ (liftIO . print) fs >> pure fs
 
-class ModifyWith a where
-  modifyWith :: MetaData -> a -> a
-
-instance ModifyWith GenericPackageDescription where
-  modifyWith metadata gpd = gpd {packageDescription = packageDescription'}
-    where
-      packageDescription' = modifyWith metadata gpd.packageDescription
-
+{-
 instance ModifyWith PD.PackageDescription where
   modifyWith metadata pd =
     pd
@@ -126,3 +88,5 @@ instance ModifyWith BuildInfo where
       }
     where
       is_base = ("base" ==) . unPackageName . depPkgName
+
+-}

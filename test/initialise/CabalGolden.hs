@@ -1,23 +1,45 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module CabalGolden (golden) where
 
+import qualified Cabal as SUT
+import Configuration (Configuration (..))
+import Control.Monad.Reader (liftIO)
+import Data.ByteString (readFile)
+import Data.ByteString.Lazy.Char8 (pack)
 import Data.Maybe (fromJust)
-import qualified Defaults as SUT
+import Distribution.SPDX.LicenseId (LicenseId (MIT))
+import Initialise (runInitialise)
 import Network.URI (parseURI)
-import Test.Hspec (Spec, describe, it, shouldBe)
-import Test.Tasty (TestTree)
-import Test.Tasty.Golden (TestTree)
+import System.FilePath (normalise, replaceExtension, takeBaseName)
+import Test.Tasty (TestTree, testGroup)
+import Test.Tasty.Golden (findByExtension, goldenVsStringDiff)
+import Prelude hiding (readFile)
 
 golden :: IO TestTree
 golden =
-  testGroup "Cabal" $
-    testGroup "convert" . map convertTest <$> findByExtension [".cabal"] d
+  testGroup "Cabal.convert"
+    . map convertTest
+    <$> findByExtension [".cabal"] d
   where
     d = normalise "test/initialise/data"
 
 convertTest :: FilePath -> TestTree
-convertTest path = goldenVsStringDiff name diff golden action
+convertTest p = goldenVsStringDiff n diff gold action
   where
-    name = takeBaseName path
-    diff golden output = ["diff", "-u", golden, output]
-    golden = path `replaceExtension` ".golden.cabal"
-    action = SUT.convert =<< SUT.contents path
+    n = takeBaseName p
+    diff a b = ["diff", "-u", a, b]
+    gold = p `replaceExtension` ".golden.cabal"
+    action = do
+      contents <- liftIO (readFile p)
+      pack <$> runInitialise (SUT.convert contents) configuration
+    configuration =
+      Configuration
+        { name = "sentinel",
+          homepage = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
+          author = "Sentinel",
+          maintainer = "sentinel@example.com",
+          licence = MIT,
+          path = ".",
+          year = 1970
+        }
