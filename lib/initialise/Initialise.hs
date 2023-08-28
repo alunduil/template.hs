@@ -1,19 +1,13 @@
 module Initialise
   ( Initialise,
     runInitialise,
-    relativePath,
-    replaceIf,
-    replace,
   )
 where
 
+import Configuration (Configuration)
 import Control.Monad.Reader (ReaderT, runReaderT)
-import GHC.IO.Encoding (TextDecoder)
 
-type Initialise = ReaderT MetaData IO
+type Initialise = ReaderT Configuration IO
 
-runInitialise :: Initialise () -> IO ()
+runInitialise :: Initialise () -> Configuration -> IO ()
 runInitialise = runReaderT
-
-contents :: FilePath -> Initialise Text
-contents path = undefined

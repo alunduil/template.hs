@@ -2,17 +2,16 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Configuration
-  ( getDefaults,
-    MetaData (..),
+  ( Configuration (..),
     parser,
   )
 where
 
-import Data.Maybe (maybe)
+import Data.Text (Text)
 import Data.Time.Calendar (Year)
 import Defaults (Defaults (..), dHomePage, dName)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
-import Network.URI (URI (uriPath), parseURI)
+import Network.URI (URI, parseURI)
 import Options.Applicative
   ( Parser,
     auto,
@@ -22,15 +21,13 @@ import Options.Applicative
     long,
     metavar,
     option,
-    short,
     showDefault,
     strOption,
     value,
   )
 import Options.Applicative.Builder (maybeReader)
-import System.FilePath (dropExtension, takeBaseName)
 
-data MetaData = MetaData
+data Configuration = Configuration
   { name :: Text,
     homepage :: URI,
     author :: Text,
@@ -40,9 +37,9 @@ data MetaData = MetaData
     year :: Year
   }
 
-parser :: Defaults -> Parser MetaData
+parser :: Defaults -> Parser Configuration
 parser ds@(Defaults {..}) =
-  MetaData
+  Configuration
     <$> strOption
       ( long "name"
           <> help "Name of the new project."
@@ -84,7 +81,7 @@ parser ds@(Defaults {..}) =
       auto
       ( long "path"
           <> help "Project path.  Only used for testing."
-          <> value path
+          <> value dPath
           <> showDefault
           <> metavar "PATH"
           <> hidden
@@ -94,7 +91,7 @@ parser ds@(Defaults {..}) =
       auto
       ( long "year"
           <> help "Copyright year.  Only used for testing."
-          <> value year
+          <> value dYear
           <> showDefault
           <> metavar "YEAR"
           <> hidden

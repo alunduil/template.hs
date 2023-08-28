@@ -1,8 +1,8 @@
 {-# LANGUAGE RecordWildCards #-}
 
 module Defaults
-  ( Defaults (..),
-    getDefaults,
+  ( getDefaults,
+    Defaults (..),
     dName,
     dHomePage,
   )

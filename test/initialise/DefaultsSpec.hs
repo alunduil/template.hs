@@ -7,16 +7,6 @@ import qualified Defaults as SUT
 import Network.URI (parseURI)
 import Test.Hspec (Spec, describe, it, shouldBe)
 
-defaults :: SUT.Defaults
-defaults =
-  SUT.Defaults
-    { SUT.dOrigin = fromJust (parseURI "http://github.com/username/repository.git"),
-      SUT.dAuthor = "Forename Surname",
-      SUT.dMaintainer = "username@example.com",
-      SUT.dPath = ".",
-      SUT.dYear = 1970
-    }
-
 spec :: Spec
 spec = describe "Defaults" $ do
   describe "dName" $ do
@@ -36,3 +26,13 @@ spec = describe "Defaults" $ do
             SUT.dPath = "/workspaces/template.hs",
             SUT.dYear = 2023
           }
+
+defaults :: SUT.Defaults
+defaults =
+  SUT.Defaults
+    { SUT.dOrigin = fromJust (parseURI "http://github.com/username/repository.git"),
+      SUT.dAuthor = "Forename Surname",
+      SUT.dMaintainer = "username@example.com",
+      SUT.dPath = ".",
+      SUT.dYear = 1970
+    }

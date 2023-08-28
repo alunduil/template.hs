@@ -1,9 +1,8 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedRecordDot #-}
 
-module Cabal (convert) where
+module Cabal (replace, convert) where
 
-import Configuration (MetaData (..))
 import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
 import Data.ByteString (ByteString, readFile)
@@ -46,7 +45,7 @@ import Distribution.Types.UnqualComponentName (mkUnqualComponentName)
 import Distribution.Types.Version (mkVersion)
 import Distribution.Utils.ShortText (toShortText)
 import GHC.Base (NonEmpty)
-import Replace (replaceWith)
+import Initialise (Initialise)
 import System.FilePath ((</>))
 import Text.Parsec.Error (ParseError)
 import Prelude hiding (readFile)
@@ -55,7 +54,16 @@ instance Exception (NonEmpty PError)
 
 instance Exception ParseError
 
-convert :: MetaData -> FilePath -> IO ()
+replace :: FilePath -> Initialise ()
+replace path = do
+  -- TODO handle in replaceWith
+  path' <- replaceBaseName . name <$> ask
+  -- TODO replaceWith convert
+  liftIO (readFile path) >>= convert >>= liftIO (writeFile path')
+  -- TODO handle in replaceWith
+  liftIO $ removeFile path
+
+convert :: Text -> Initialise Text
 convert metadata cabal = (path metadata `replaceWith`) . modifyWith metadata <$> contents cabal
 
 contents :: FilePath -> IO [Field Position]

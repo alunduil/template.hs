@@ -36,16 +36,24 @@ library initialise-library
   import:           initialise-common
   exposed-modules:
     Cabal
+    Configuration
     Defaults
     Git
+    Initialise
 
   -- TODO Make Git private.
-  --other-modules:
+  --other-modules: Git
   build-depends:
-    , extra     ^>=1.7.14
-    , filepath  ^>=1.4.2.2
-    , process   ^>=1.6.16.0
-    , time      ^>=1.12.2
+    , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
+    , Cabal-syntax          ^>=3.10.1.0
+    , exceptions            ^>=0.10.7
+    , extra                 ^>=1.7.14
+    , filepath              ^>=1.4.2.2
+    , mtl                   ^>=2.2.2
+    , optparse-applicative  ^>=0.18.1.0
+    , parsec                ^>=3.1.16.1
+    , process               ^>=1.6.16.0
+    , time                  ^>=1.12.2
 
   hs-source-dirs:   lib/initialise
 
@@ -67,7 +75,8 @@ test-suite initialise-test
     , tasty-hspec         ^>=1.2.0.4
 
   other-modules:
-    CabalSpec
+    CabalGolden
+    ConfigurationSpec
     DefaultsSpec
     GitSpec
 
@@ -83,15 +92,10 @@ test-suite initialise-test
 executable initialise
   main-is:          Main.hs
   build-depends:
-    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
-    , Cabal                 ^>=3.6.3.0  || ^>=3.8.1.0  || ^>=3.10.1.0
-    , exceptions            ^>=0.10.7
-    , http-client           ^>=0.7.13.1
-    , http-conduit          ^>=2.3.8.3
+    , base                ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , http-client         ^>=0.7.13.1
+    , http-conduit        ^>=2.3.8.3
     , initialise-library
-    , optparse-applicative  ^>=0.18.1.0
-    , parsec                ^>=3.1.16.1
 
   --other-modules:
   --  Cabal
