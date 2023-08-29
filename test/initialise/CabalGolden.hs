@@ -11,7 +11,7 @@ import Data.Maybe (fromJust)
 import Distribution.SPDX.LicenseId (LicenseId (MIT))
 import Initialise (runInitialise)
 import Network.URI (parseURI)
-import System.FilePath (normalise, replaceExtension, takeBaseName)
+import System.FilePath (isExtensionOf, normalise, replaceExtension, takeBaseName)
 import Test.Tasty (TestTree, testGroup)
 import Test.Tasty.Golden (findByExtension, goldenVsStringDiff)
 import Prelude hiding (readFile)
@@ -20,6 +20,7 @@ golden :: IO TestTree
 golden =
   testGroup "Cabal.convert"
     . map convertTest
+    . filter (not . (".golden.cabal" `isExtensionOf`))
     <$> findByExtension [".cabal"] d
   where
     d = normalise "test/initialise/data"
