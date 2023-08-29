@@ -6,9 +6,9 @@ import qualified Configuration as SUT
 import Data.Maybe (fromJust)
 import Defaults (Defaults (..))
 import Network.URI (parseURI)
-import Options.Applicative (ParserFailure, ParserHelp, ParserResult (CompletionInvoked, Failure, Success), defaultPrefs, execParserPure, failureCode, helper, info, renderFailure, (<**>))
-import System.Exit (ExitCode (ExitFailure, ExitSuccess))
-import Test.Hspec (Expectation, Spec, describe, expectationFailure, it, shouldBe, shouldNotBe)
+import Options.Applicative (ParserResult (CompletionInvoked, Failure, Success), defaultPrefs, execParserPure, helper, info, renderFailure, (<**>))
+import System.Exit (ExitCode (ExitFailure))
+import Test.Hspec (Expectation, Spec, describe, expectationFailure, it, shouldBe)
 
 spec :: Spec
 spec =
@@ -23,7 +23,7 @@ parse :: [String] -> ParserResult SUT.Configuration
 parse =
   execParserPure
     defaultPrefs
-    ( info (SUT.parser defaults <**> helper)
+    ( info (SUT.parser defaults <**> helper) mempty
     )
 
 shouldFailWith :: ParserResult SUT.Configuration -> (String, ExitCode) -> Expectation
