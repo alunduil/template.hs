@@ -49,11 +49,11 @@ library initialise-library
   -- TODO Make Git private.
   --other-modules: Git
   build-depends:
-    , exceptions  ^>=0.10.7
+    , exceptions  ^>=0.10.5
     , extra       ^>=1.7.14
     , parsec      ^>=3.1.16.1
     , process     ^>=1.6.16.0
-    , time        ^>=1.12.2
+    , time        ^>=1.11.1.1 || ^>=1.12.2
 
   hs-source-dirs:   lib/initialise
 
