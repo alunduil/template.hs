@@ -9,7 +9,7 @@ import Control.Monad.Catch (throwM)
 import Control.Monad.Reader (asks, liftIO)
 import Data.ByteString (ByteString, readFile)
 import Data.Text (unpack)
-import Distribution.Fields (CommentPosition (NoComment), Field, fromParsecFields, readFields, showFields)
+import Distribution.Fields (CommentPosition (CommentBefore), Field, fromParsecFields, readFields, showFields)
 import Distribution.Parsec.Position (Position)
 import Initialise (Initialise)
 import System.Directory.Extra (removeFile)
@@ -33,7 +33,7 @@ replace path = do
 convert :: ByteString -> Initialise String
 convert contents = do
   fs <- either throwM pure (readFields contents)
-  showFields (const NoComment) . fromParsecFields <$> convert' fs
+  showFields (const $ CommentBefore []) . fromParsecFields <$> convert' fs
 
 convert' :: [Field Position] -> Initialise [Field Position]
 convert' fs = mapM_ (liftIO . print) fs >> pure fs

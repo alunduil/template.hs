@@ -44,4 +44,5 @@ repos:
         entry: cabal-fmt
         language: system
         files: '\.cabal$'
+        exclude: '\.golden\.cabal$'
         args: ["-i"]
