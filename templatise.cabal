@@ -51,7 +51,7 @@ library initialise-library
   build-depends:
     , exceptions  ^>=0.10.5
     , extra       ^>=1.7.14
-    , parsec      ^>=3.1.16.1
+    , parsec      ^>=3.1.15.0
     , process     ^>=1.6.16.0
     , time        ^>=1.11.1.1 || ^>=1.12.2
 
