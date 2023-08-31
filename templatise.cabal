@@ -49,7 +49,7 @@ library initialise-library
   -- TODO Make Git private.
   --other-modules: Git
   build-depends:
-    , exceptions  ^>=0.10.5
+    , exceptions  ^>=0.10.4
     , extra       ^>=1.7.14
     , parsec      ^>=3.1.15.0
     , process     ^>=1.6.16.0
