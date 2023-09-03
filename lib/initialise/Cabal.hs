@@ -1,16 +1,21 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Cabal (replace, convert) where
 
-import Configuration (Configuration (name))
+import Configuration (Configuration (author, licence, name, year))
 import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
 import Control.Monad.Reader (asks, liftIO)
 import Data.ByteString (ByteString, readFile)
+import Data.ByteString.Char8 (pack)
 import Data.Text (unpack)
-import Distribution.Fields (CommentPosition (NoComment), Field, fromParsecFields, readFields, showFields)
+import Data.Text.Encoding (encodeUtf8)
+import Distribution.Fields (CommentPosition (NoComment), Field (Field, Section), FieldLine (FieldLine), Name (Name), fromParsecFields, readFields, showFields)
+import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
+import Distribution.SPDX (licenseId)
 import Initialise (Initialise)
 import System.Directory.Extra (removeFile)
 import System.FilePath (replaceBaseName)
@@ -33,10 +38,22 @@ replace path = do
 convert :: ByteString -> Initialise String
 convert contents = do
   fs <- either throwM pure (readFields contents)
-  showFields (const NoComment) . fromParsecFields <$> convert' fs
+  showFields (const NoComment) . fromParsecFields <$> mapM convert' fs
 
-convert' :: [Field Position] -> Initialise [Field Position]
-convert' fs = mapM_ (liftIO . print) fs >> pure fs
+convert' :: Field Position -> Initialise (Field Position)
+convert' f@(Field n@(Name _ fName) ls) = do
+  name' <- asks name
+  licence' <- asks licence
+  author' <- asks author
+  year' <- asks year
+  let annotation = fieldLineAnn . head $ ls
+  case fName of
+    "name" -> pure $ Field n [FieldLine annotation (encodeUtf8 name')]
+    "version" -> pure $ Field n [FieldLine annotation "0.1.0.0"]
+    "license" -> pure $ Field n [FieldLine annotation (pack $ licenseId licence')]
+    "copyright" -> pure $ Field n [FieldLine annotation (unwords ["(c)", author', show year'])]
+    _ -> pure f
+convert' f@(Section n@(Name _ fName) arguments ls) = undefined
 
 {-
 instance ModifyWith PD.PackageDescription where

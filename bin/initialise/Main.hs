@@ -1,31 +1,11 @@
 module Main (main, main') where
 
-import qualified Cabal (convert)
-import qualified Configuration
-  ( MetaData (path),
-    optionParser,
-  )
-import Control.Monad (forM_)
-import Control.Monad.Reader (ReaderT, runReaderT)
-import Data.Time (UTCTime (utctDay), toGregorian)
-import Data.Time.Clock (getCurrentTime)
+import qualified Cabal (replace)
+import qualified Configuration (parser)
 import qualified Defaults (getDefaults)
-import qualified File (convert)
-import qualified Git (config)
+import qualified File (replace)
 import Initialise (Initialise)
-import qualified Licence (convert)
-import Network.URI (URI (uriPath), parseURI)
-import Options.Applicative
-  ( execParser,
-    fullDesc,
-    header,
-    helper,
-    info,
-    progDesc,
-    (<**>),
-  )
-import System.Directory.Extra (getCurrentDirectory)
-import System.FilePath (dropExtension, takeBaseName, (</>))
+import qualified Licence (is, replace)
 
 main :: IO ()
 main = do
