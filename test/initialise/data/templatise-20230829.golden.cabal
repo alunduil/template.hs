@@ -1,21 +1,16 @@
 cabal-version:      3.0
-name:               templatise
+name:               sentinel
 version:            0.1.0.0
-license:            Unlicense
+license:            MIT
 license-file:       LICENSE
-copyright:          (c) 2023 Alex Brandt
-author:             Alex Brandt
-maintainer:         alunduil@gmail.com
+copyright:          (c) 1970 Sentinel
+author:             Sentinel
+maintainer:         sentinel@example.com
 stability:          alpha
-homepage:           https://github.com/alunduil/template.hs
-bug-reports:        https://github.com/alunduil/template.hs/issues
-synopsis:
-    You can use template.hs to create a new Haskell GitHub repository.
-
-description:
-    You can use template.hs to create a new GitHub repository. The repository will
-    have Haskell, VS Code devcontainers, and various GitHub actions ready to use.
-
+homepage:           https://github.com/sentinel/sentinel.git
+bug-reports:        https://github.com/sentinel/sentinel.git/issues
+synopsis:           TODO
+description:        TODO
 category:           VSCode
 tested-with:        GHC ==9.2.8 || ==9.4.5 || ==9.6.2
 extra-source-files:
@@ -24,9 +19,9 @@ extra-source-files:
 
 source-repository head
     type:     git
-    location: https://github.com/alunduil/template.hs
+    location: https://github.com/sentinel/sentinel.git
 
-common initialise-common
+common sentinel-common
     build-depends:
         , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
         , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
@@ -37,15 +32,9 @@ common initialise-common
         , optparse-applicative  ^>=0.18.1.0
         , text                  ^>=2.0.2
 
-library initialise-library
-    import:           initialise-common
+library sentinel-library
+    import:           sentinel-common
     exposed-modules:
-        Cabal
-        Configuration
-        Defaults
-        Git
-        Initialise
-
     build-depends:
         , exceptions  ^>=0.10.5
         , extra       ^>=1.7.14
@@ -53,39 +42,34 @@ library initialise-library
         , process     ^>=1.6.16.0
         , time        ^>=1.11.1.1 || ^>=1.12.2
 
-    hs-source-dirs:   lib/initialise
+    hs-source-dirs:   lib/sentinel
     default-language: Haskell2010
     ghc-options:      -Wall
 
-test-suite initialise-test
-    import:           initialise-common
+test-suite sentinel-test
+    import:           sentinel-common
     type:             exitcode-stdio-1.0
     main-is:          Main.hs
     build-depends:
         , hspec               ^>=2.11.4
-        , initialise-library
+        , sentinel-library
         , tasty               ^>=1.4.3
         , tasty-golden        ^>=2.3.5
         , tasty-hspec         ^>=1.2.0.4
 
     other-modules:
-        CabalGolden
-        ConfigurationSpec
-        DefaultsSpec
-        GitSpec
-
-    hs-source-dirs:   test/initialise
+    hs-source-dirs:   test/sentinel
     default-language: Haskell2010
     ghc-options:      -threaded -Wall
 
-executable initialise
+executable sentinel
     main-is:          Main.hs
     build-depends:
         , base                ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
         , http-client         ^>=0.7.13.1
         , http-conduit        ^>=2.3.8.3
-        , initialise-library
+        , sentinel-library
 
-    hs-source-dirs:   bin/initialise
+    hs-source-dirs:   bin/sentinel
     default-language: Haskell2010
     ghc-options:      -threaded -Wall
