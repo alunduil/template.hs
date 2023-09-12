@@ -13,7 +13,16 @@ import Data.ByteString (ByteString, append, breakSubstring, concat, readFile, st
 import Data.ByteString.Char8 (pack)
 import Data.Text (Text, unpack)
 import Data.Text.Encoding (encodeUtf8)
-import Distribution.Fields (CommentPosition (NoComment), Field (Field, Section), FieldLine (FieldLine), Name (Name), SectionArg (SecArgName, SecArgStr), fromParsecFields, readFields, showFields)
+import Distribution.Fields
+  ( CommentPosition (NoComment),
+    Field (Field, Section),
+    FieldLine (FieldLine),
+    Name (Name),
+    SectionArg (SecArgName, SecArgStr),
+    fromParsecFields,
+    readFields,
+    showFields,
+  )
 import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
 import Distribution.SPDX (licenseId)

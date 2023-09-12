@@ -43,6 +43,7 @@ library initialise-library
     Cabal
     Configuration
     Defaults
+    File
     Git
     Initialise
 
@@ -79,6 +80,7 @@ test-suite initialise-test
     CabalGolden
     ConfigurationSpec
     DefaultsSpec
+    FileGolden
     GitSpec
 
   hs-source-dirs:   test/initialise
