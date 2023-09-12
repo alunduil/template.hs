@@ -19,19 +19,21 @@ import Prelude hiding (readFile)
 
 golden :: IO TestTree
 golden = do
-  devcontainer <-
-    testGroup "devcontainer.json"
-      . map convertTest
-      . filter (not . (".golden.json" `isExtensionOf`))
-      <$> findByExtension [".json"] d
-  changelog <-
-    testGroup "CHANGELOG.md"
-      . map convertTest
-      . filter (not . (".golden.md" `isExtensionOf`))
-      <$> findByExtension [".md"] d
-  pure $ testGroup "File.convert" [devcontainer, changelog]
+  testGroup "File.convert"
+    <$> mapM
+      g
+      [ "devcontainer.json",
+        "CHANGELOG.md",
+        "haskell-ci.yml"
+      ]
   where
     d = normalise "test/initialise/data"
+    g n =
+      let ext = takeExtension n
+       in testGroup n
+            . map convertTest
+            . filter (not . ((".golden" ++ ext) `isExtensionOf`))
+            <$> findByExtension [ext] d
 
 convertTest :: FilePath -> TestTree
 convertTest p = goldenVsStringDiff n diff gold action
