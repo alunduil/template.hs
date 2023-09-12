@@ -21,4 +21,7 @@ replace path = do
 convert :: Text -> Initialise Text
 convert contents = do
   Configuration {..} <- ask
-  pure $ T.replace "template.hs" name contents
+  pure
+    . T.replace "template-hs" name
+    . T.replace "template.hs" name
+    $ contents
