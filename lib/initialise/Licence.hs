@@ -1,6 +1,5 @@
 module Licence (convert) where
 
-import Configuration (MetaData (..))
 import Data.ByteString.Lazy (ByteString, writeFile)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
 import Network.HTTP.Client (responseBody)

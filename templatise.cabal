@@ -46,6 +46,7 @@ library initialise-library
     File
     Git
     Initialise
+    Licence
 
   -- TODO Make Git private.
   --other-modules: Git
