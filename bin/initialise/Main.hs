@@ -27,12 +27,12 @@ main = do
 
 main' :: Initialise ()
 main' = do
-  unlessM (Licence.is Unlicense) $ Licence.replace "LICENSE"
-  Cabal.replace "templatise.cabal"
   mapM_
     File.replace
     [ ".devcontainer" </> "devcontainer.json",
       "CHANGELOG.md"
     ]
+  unlessM (Licence.is Unlicense) $ Licence.replace "LICENSE"
+  Cabal.replace "templatise.cabal"
 
 -- TODO README

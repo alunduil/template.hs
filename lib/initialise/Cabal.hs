@@ -18,8 +18,8 @@ import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
 import Distribution.SPDX (licenseId)
 import Initialise (Initialise)
-import System.Directory.Extra (removeFile)
-import System.FilePath (replaceBaseName)
+import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
+import System.FilePath (replaceBaseName, (</>))
 import Text.Parsec.Error (ParseError)
 import Prelude hiding (concat, readFile)
 
@@ -27,6 +27,13 @@ instance Exception ParseError
 
 replace :: FilePath -> Initialise ()
 replace path = do
+  replaceCabal path
+  "lib" `replaceDirectoryWith` replaceLib
+  "test" `replaceDirectoryWith` replaceTest
+  "bin" `replaceDirectoryWith` replaceBin
+
+replaceCabal :: FilePath -> Initialise ()
+replaceCabal path = do
   -- TODO handle in replaceWith
   path' <- asks (flip replaceBaseName path . unpack . name)
   -- TODO replaceWith convert
@@ -89,3 +96,43 @@ convertString r s = case token `stripPrefix` rest of
   where
     (prefix, rest) = token `breakSubstring` s
     token = "initialise"
+
+-- TODO Move to Initialise module?
+replaceDirectoryWith :: FilePath -> (FilePath -> Initialise ()) -> Initialise ()
+replaceDirectoryWith component r = do
+  name' <- asks name
+  path' <- asks ((</> component </> unpack name') . path)
+  liftIO $ createDirectoryIfMissing True path'
+  r path'
+  liftIO $ removeDirectoryRecursive $ replaceBaseName "initialise" path'
+
+replaceLib :: FilePath -> Initialise ()
+replaceLib _path = pure ()
+
+replaceTest :: FilePath -> Initialise ()
+replaceTest path = do
+  name' <- asks name
+  -- TODO Template library.
+  liftIO $
+    writeFile (path </> "Main.hs") $
+      unlines
+        [ "module Main (main) where",
+          "",
+          "import Test.Tasty (defautMain, testGroup)",
+          "",
+          "main :: IO ()",
+          "main = defaultMain $ testGroup \"" ++ unpack name' ++ "-library\" []"
+        ]
+
+replaceBin :: FilePath -> Initialise ()
+replaceBin path = do
+  name' <- asks name
+  -- TODO Template library.(*)
+  liftIO $
+    writeFile (path </> "Main.hs") $
+      unlines
+        [ "module Main (main) where",
+          "",
+          "main :: IO ()",
+          "main = putStrLn " ++ unpack name'
+        ]
