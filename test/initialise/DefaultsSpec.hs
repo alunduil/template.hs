@@ -4,8 +4,9 @@ module DefaultsSpec (spec) where
 
 import Data.Maybe (fromJust)
 import qualified Defaults as SUT
+import Hooks (withGitRepo)
 import Network.URI (parseURI)
-import Test.Hspec (Spec, describe, it, shouldBe)
+import Test.Hspec (Spec, around, describe, it, shouldBe)
 
 spec :: Spec
 spec = describe "Defaults" $ do
@@ -15,15 +16,15 @@ spec = describe "Defaults" $ do
   describe "dHomePage" $ do
     it "converts origin to a home page" $
       SUT.dHomePage defaults `shouldBe` fromJust (parseURI "http://github.com/username/repository")
-  describe "getDefaults" $ do
-    it "inspects the current repository" $ do
+  describe "getDefaults" $ around withGitRepo $ do
+    it "inspects the current repository" $ \p -> do
       ds <- SUT.getDefaults
       ds
         `shouldBe` SUT.Defaults
-          { SUT.dOrigin = fromJust (parseURI "https://github.com/alunduil/template.hs.git"),
-            SUT.dAuthor = "Alex Brandt",
-            SUT.dMaintainer = "alunduil@gmail.com",
-            SUT.dPath = "/workspaces/template.hs",
+          { SUT.dOrigin = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
+            SUT.dAuthor = "Sentinel",
+            SUT.dMaintainer = "sentinel@example.com",
+            SUT.dPath = p,
             SUT.dYear = 2023
           }
 
