@@ -51,11 +51,13 @@ library initialise-library
   -- TODO Make Git private.
   --other-modules: Git
   build-depends:
-    , exceptions  ^>=0.10.4
-    , extra       ^>=1.7.14
-    , parsec      ^>=3.1.15.0
-    , process     ^>=1.6.16.0
-    , time        ^>=1.11.1.1 || ^>=1.12.2
+    , exceptions    ^>=0.10.4
+    , extra         ^>=1.7.14
+    , http-client   ^>=0.7.14
+    , http-conduit  ^>=2.3.8.3
+    , parsec        ^>=3.1.15.0
+    , process       ^>=1.6.16.0
+    , time          ^>=1.11.1.1 || ^>=1.12.2
 
   hs-source-dirs:   lib/initialise
 
@@ -96,16 +98,10 @@ test-suite initialise-test
 executable initialise
   main-is:          Main.hs
   build-depends:
-    , base                ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , filepath              ^>=1.4.2.2
     , initialise-library
-
-  --other-modules:
-  --  Cabal
-  --  Configuration
-  --  File
-  --  Initialise
-  --  Licence
-  --  Replace
+    , optparse-applicative  ^>=0.18.1.0
 
   hs-source-dirs:   bin/initialise
 

@@ -1,17 +1,24 @@
-module Licence (convert) where
+{-# LANGUAGE RecordWildCards #-}
 
+module Licence (replace) where
+
+import Configuration (Configuration (..))
+import Control.Monad.Reader (ask, liftIO, unless)
 import Data.ByteString.Lazy (ByteString, writeFile)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
+import Initialise (Initialise)
 import Network.HTTP.Client (responseBody)
 import Network.HTTP.Simple (httpLBS, parseRequest)
+import System.FilePath ((</>))
 import Prelude hiding (writeFile)
 
-convert :: MetaData -> FilePath -> IO ()
-convert MetaData {licence = Unlicense} _path = pure ()
--- TODO Fill in LICENCE template values (i.e., <year>)
-convert MetaData {licence = licence} path = writeFile path =<< text licence
+replace :: FilePath -> Initialise ()
+replace p = do
+  Configuration {..} <- ask
+  unless (licence == Unlicense) $
+    liftIO (writeFile (p </> path) =<< contents licence)
 
-text :: LicenseId -> IO ByteString
-text licence = do
-  request <- parseRequest $ "https://spdx.org/licenses/" ++ licenseId licence ++ ".txt"
+contents :: LicenseId -> IO ByteString
+contents l = do
+  request <- parseRequest $ "https://spdx.org/licenses/" ++ licenseId l ++ ".txt"
   responseBody <$> httpLBS request
