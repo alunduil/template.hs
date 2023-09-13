@@ -3,7 +3,8 @@
 module Licence (replace) where
 
 import Configuration (Configuration (..))
-import Control.Monad.Reader (ask, liftIO, unless)
+import Control.Monad (unless)
+import Control.Monad.Reader (ask, liftIO)
 import Data.ByteString.Lazy (ByteString, writeFile)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
 import Initialise (Initialise)
