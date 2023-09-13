@@ -22,6 +22,12 @@ extra-source-files:
   CHANGELOG.md
   README.md
 
+data-files:
+  test/**/*.cabal
+  test/**/*.json
+  test/**/*.md
+  test/**/*.yml
+
 source-repository head
   type:     git
   location: https://github.com/alunduil/template.hs
