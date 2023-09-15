@@ -8,7 +8,7 @@ permissions:
   contents: read
 
 jobs:
-  cabal:
+  publih:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,4 +16,4 @@ jobs:
       - name: cabal sdist
         run: cabal sdist
       - name: cabal upload
-        run: cabal upload --publish --username=${{ secrets.HACKAGE_USERNAME }} --password=${{ secrets.HACKAGE_PASSWORD }} dist/*.tar.gz
+        run: cabal upload --publish --username=${{ secrets.HACKAGE_USERNAME }} --password=${{ secrets.HACKAGE_PASSWORD }} dist-newstyle/sdist/*.tar.gz
