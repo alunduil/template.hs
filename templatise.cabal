@@ -34,7 +34,7 @@ source-repository head
 
 common initialise-common
   build-depends:
-    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0
     , bytestring            ^>=0.11.4.0 || ^>=0.12.0.2
     , Cabal-syntax          ^>=3.8.1.0  || ^>=3.10.1.0
     , filepath              ^>=1.4.2.2
@@ -107,7 +107,7 @@ test-suite initialise-test
 executable initialise
   main-is:          Main.hs
   build-depends:
-    , base                  ^>=4.16.4.0 || ^>=4.17.0.0 || ^>=4.18.0.0
+    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0
     , filepath              ^>=1.4.2.2
     , initialise-library
     , optparse-applicative  ^>=0.18.1.0
