@@ -28,7 +28,8 @@ conditions.  See the [LICENSE] file for details.
 1. Type "clone repository in container" and hit return
 1. Input the GitHub URL of your new repository
 1. In the resulting terminal (ctrl+\`), run: `cabal run initialise`
-1. Resolve the README update issue that is generated
+1. Browse to "Setting" -> "Actions" -> "General"
+1. Tick "Allow GitHub Actions to create and approve pull requests"
 1. Continue working on your awesome project
 
 ## Documentation
