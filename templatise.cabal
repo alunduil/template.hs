@@ -42,15 +42,15 @@ source-repository head
 
 common initialise-common
   build-depends:
-    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , bytestring            ^>=0.11.3.1 || ^>=0.12.0.2
-    , Cabal-syntax          ^>=3.8.1.0  || ^>=3.10.1.0
-    , filepath              ^>=1.4.2.2
-    , mtl                   ^>=2.2.2    || ^>=2.3.1
-    , network-uri           ^>=2.6.4.1  || ^>=2.7.0.0
-    , optparse-applicative  ^>=0.18.1.0
-    , process               ^>=1.6.13.2
-    , text                  ^>=1.2.5.0  || >=2.0.2     && <2.1        || ^>=2.1
+    base ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0 || ^>=4.19.0,
+    bytestring ^>=0.11.3.1 || ^>=0.12.0.2,
+    Cabal-syntax ^>=3.8.1.0 || ^>=3.10.1.0,
+    filepath ^>=1.4.2.2 || ^>=1.5.0,
+    mtl ^>=2.2.2 || ^>=2.3.1,
+    network-uri ^>=2.6.4.1 || ^>=2.7.0.0,
+    optparse-applicative ^>=0.18.1.0,
+    process ^>=1.6.13.2,
+    text ^>=1.2.5.0 || >=2.0.2 && <2.1 || ^>=2.1
 
 library initialise-library
   import:           initialise-common
@@ -66,12 +66,12 @@ library initialise-library
   -- TODO Make Git private.
   --other-modules: Git
   build-depends:
-    , exceptions    ^>=0.10.4
-    , extra         ^>=1.7.14
-    , http-client   ^>=0.7.14
-    , http-conduit  ^>=2.3.8.3
-    , parsec        ^>=3.1.15.0
-    , time          ^>=1.11.1.1 || ^>=1.12.2
+    exceptions ^>=0.10.4,
+    extra ^>=1.7.14,
+    http-client ^>=0.7.14,
+    http-conduit ^>=2.3.8.3,
+    parsec ^>=3.1.15.0,
+    time ^>=1.11.1.1 || ^>=1.12.2
 
   hs-source-dirs:   lib/initialise
 
@@ -87,13 +87,13 @@ test-suite initialise-test
   type:             exitcode-stdio-1.0
   main-is:          Main.hs
   build-depends:
-    , directory           ^>=1.3.6.2
-    , hspec               ^>=2.11.4
-    , initialise-library
-    , tasty               >=1.4.3    && <1.5 || ^>=1.5
-    , tasty-golden        ^>=2.3.5
-    , tasty-hspec         ^>=1.2.0.4
-    , temporary           ^>=1.3
+    directory ^>=1.3.6.2,
+    hspec ^>=2.11.4,
+    initialise-library,
+    tasty >=1.4.3 && <1.5 || ^>=1.5,
+    tasty-golden ^>=2.3.5,
+    tasty-hspec ^>=1.2.0.4,
+    temporary ^>=1.3
 
   other-modules:
     CabalGolden
@@ -115,10 +115,10 @@ test-suite initialise-test
 executable initialise
   main-is:          Main.hs
   build-depends:
-    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , filepath              ^>=1.4.2.2
-    , initialise-library
-    , optparse-applicative  ^>=0.18.1.0
+    base ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0 || ^>=4.19.0,
+    filepath ^>=1.4.2.2 || ^>=1.5.0,
+    initialise-library,
+    optparse-applicative ^>=0.18.1.0
 
   hs-source-dirs:   bin/initialise
 
