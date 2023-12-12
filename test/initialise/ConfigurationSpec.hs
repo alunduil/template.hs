@@ -19,14 +19,14 @@ spec =
       it "should error if licence isn't an SPDX licence ID" $ do
         parse ["--licence", "not-a-licence"] `shouldFailWith` ("", ExitFailure 1)
 
-parse :: [Text] -> ParserResult SUT.Configuration
+parse :: [String] -> ParserResult SUT.Configuration
 parse =
   execParserPure
     defaultPrefs
     ( info (SUT.parser defaults <**> helper) mempty
     )
 
-shouldFailWith :: ParserResult SUT.Configuration -> (Text, ExitCode) -> Expectation
+shouldFailWith :: ParserResult SUT.Configuration -> (String, ExitCode) -> Expectation
 shouldFailWith (Success _) _ = expectationFailure "Expected Failure but got Success"
 shouldFailWith (CompletionInvoked _) _ = expectationFailure "Expected Failure but got CompletionInvoked"
 shouldFailWith (Failure f) rhs = renderFailure f "" `shouldBe` rhs

@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module GitSpec (spec) where
 
 import Data.Text (pack)
