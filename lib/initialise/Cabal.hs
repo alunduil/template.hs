@@ -10,9 +10,11 @@ import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
 import Control.Monad.Reader (asks, liftIO)
 import Data.ByteString (ByteString, append, breakSubstring, concat, readFile, stripPrefix)
-import Data.ByteString.Char8 (pack)
-import Data.Text (Text, unpack)
+import qualified Data.ByteString.Char8 as BS (pack)
+import Data.Text (Text, unlines)
+import qualified Data.Text as T (pack, unpack)
 import Data.Text.Encoding (encodeUtf8)
+import Data.Text.IO (writeFile)
 import Distribution.Fields
   ( CommentPosition (NoComment),
     Field (Field, Section),
@@ -30,7 +32,7 @@ import Initialise (Initialise)
 import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
 import System.FilePath (replaceBaseName, (</>))
 import Text.Parsec.Error (ParseError)
-import Prelude hiding (concat, readFile)
+import Prelude hiding (concat, readFile, unlines, writeFile)
 
 instance Exception ParseError
 
@@ -44,7 +46,7 @@ replace path = do
 replaceCabal :: FilePath -> Initialise ()
 replaceCabal path = do
   -- TODO handle in replaceWith
-  path' <- asks (flip replaceBaseName path . unpack . name)
+  path' <- asks (flip replaceBaseName path . T.unpack . name)
   -- TODO replaceWith convert
   contents <- liftIO $ readFile path
   contents' <- convert contents
@@ -55,7 +57,7 @@ replaceCabal path = do
 convert :: ByteString -> Initialise Text
 convert contents = do
   fs <- either throwM pure (readFields contents)
-  showFields (const NoComment) . fromParsecFields <$> mapM convert' fs
+  T.pack . showFields (const NoComment) . fromParsecFields <$> mapM convert' fs
 
 convert' :: Field Position -> Initialise (Field Position)
 convert' f@(Field n@(Name _ fName) ls) = do
@@ -64,12 +66,12 @@ convert' f@(Field n@(Name _ fName) ls) = do
     -- package
     "name" -> field (encodeUtf8 name)
     "version" -> field "0.1.0.0"
-    "license" -> field (pack $ licenseId licence)
-    "copyright" -> field (pack $ unwords ["(c)", show year, unpack author])
+    "license" -> field (BS.pack $ licenseId licence)
+    "copyright" -> field (BS.pack $ unwords ["(c)", show year, T.unpack author])
     "author" -> field (encodeUtf8 author)
     "maintainer" -> field (encodeUtf8 maintainer)
-    "homepage" -> field $ pack $ show homepage
-    "bug-reports" -> field $ pack (show homepage ++ "/issues")
+    "homepage" -> field $ BS.pack $ show homepage
+    "bug-reports" -> field $ BS.pack (show homepage ++ "/issues")
     "synopsis" -> field "TODO"
     "description" -> field "TODO"
     -- common
@@ -79,7 +81,7 @@ convert' f@(Field n@(Name _ fName) ls) = do
     "build-depends" -> pure $ Field n $ map (convertFieldLine name) ls
     "hs-source-dirs" -> pure $ Field n $ map (convertFieldLine name) ls
     -- source-repository
-    "location" -> field $ pack $ show homepage
+    "location" -> field $ BS.pack $ show homepage
     _ -> pure f
   where
     field s = pure $ Field n [FieldLine annotation s]
@@ -110,7 +112,7 @@ convertString r s = case token `stripPrefix` rest of
 replaceDirectoryWith :: FilePath -> (FilePath -> Initialise ()) -> Initialise ()
 replaceDirectoryWith component r = do
   name' <- asks name
-  path' <- asks ((</> component </> unpack name') . path)
+  path' <- asks ((</> component </> T.unpack name') . path)
   liftIO $ createDirectoryIfMissing True path'
   r path'
   liftIO $ removeDirectoryRecursive $ replaceBaseName "initialise" path'
@@ -130,7 +132,7 @@ replaceTest path = do
           "import Test.Tasty (defautMain, testGroup)",
           "",
           "main :: IO ()",
-          "main = defaultMain $ testGroup \"" ++ unpack name' ++ "-library\" []"
+          "main = defaultMain $ testGroup \"" <> name' <> "-library\" []"
         ]
 
 replaceBin :: FilePath -> Initialise ()
@@ -143,5 +145,5 @@ replaceBin path = do
         [ "module Main (main) where",
           "",
           "main :: IO ()",
-          "main = putStrLn " ++ unpack name'
+          "main = putStrLn " <> name'
         ]

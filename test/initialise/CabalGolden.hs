@@ -8,6 +8,7 @@ import Control.Monad.Reader (liftIO)
 import Data.ByteString (readFile)
 import Data.ByteString.Lazy.Char8 (pack)
 import Data.Maybe (fromJust)
+import Data.Text (unpack)
 import Distribution.SPDX.LicenseId (LicenseId (MIT))
 import Initialise (runInitialise)
 import Network.URI (parseURI)
@@ -33,7 +34,7 @@ convertTest p = goldenVsStringDiff n diff gold action
     gold = p `replaceExtension` ".golden.cabal"
     action = do
       contents <- liftIO (readFile p)
-      pack <$> runInitialise (SUT.convert contents) configuration
+      pack . unpack <$> runInitialise (SUT.convert contents) configuration
     configuration =
       Configuration
         { name = "sentinel",
