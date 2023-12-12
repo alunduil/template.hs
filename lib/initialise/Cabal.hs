@@ -52,7 +52,7 @@ replaceCabal path = do
   -- TODO handle in replaceWith
   liftIO $ removeFile path
 
-convert :: ByteString -> Initialise String
+convert :: ByteString -> Initialise Text
 convert contents = do
   fs <- either throwM pure (readFields contents)
   showFields (const NoComment) . fromParsecFields <$> mapM convert' fs
