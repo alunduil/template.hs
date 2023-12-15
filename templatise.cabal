@@ -116,8 +116,8 @@ test-suite initialise-test
 executable initialise
   main-is:          Main.hs
   build-depends:
-    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0
-    , filepath              ^>=1.4.2.2
+    , base                  ^>=4.16.3.0 || ^>=4.17.0.0 || ^>=4.18.0.0 || ^>=4.19.0.0
+    , filepath              ^>=1.4.2.2  || ^>=1.5.0
     , initialise-library
     , optparse-applicative  ^>=0.18.1.0
 
