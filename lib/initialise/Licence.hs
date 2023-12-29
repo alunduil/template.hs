@@ -17,7 +17,7 @@ replace :: FilePath -> Initialise ()
 replace p = do
   Configuration {..} <- ask
   unless (licence == Unlicense) $
-    liftIO (writeFile (p </> path) =<< contents licence)
+    liftIO (writeFile (path </> p) =<< contents licence)
 
 contents :: LicenseId -> IO ByteString
 contents l = do
