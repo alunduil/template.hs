@@ -29,6 +29,8 @@ tested-with:
    || ==9.8.1
 
 extra-source-files:
+  .devcontainer/devcontainer.json
+  .github/workflows/*.yml
   CHANGELOG.md
   README.md
 
@@ -66,7 +68,10 @@ library initialise-library
     Licence
 
   -- TODO Make Git private.
-  --other-modules: Git
+  other-modules:
+    Initialise.Initialisers
+    Initialise.Types
+
   build-depends:
     , exceptions    ^>=0.10.4
     , extra         ^>=1.7.14
@@ -104,6 +109,7 @@ test-suite initialise-test
     FileGolden
     GitSpec
     Hooks
+    InitialiseSpec
 
   hs-source-dirs:   test/initialise
 

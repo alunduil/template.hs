@@ -28,7 +28,7 @@ import Distribution.Fields
 import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
 import Distribution.SPDX (licenseId)
-import Initialise (Initialise)
+import Initialise.Types (Initialise)
 import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
 import System.FilePath (replaceBaseName, (</>))
 import Text.Parsec.Error (ParseError)
@@ -46,7 +46,7 @@ replace path = do
 replaceCabal :: FilePath -> Initialise ()
 replaceCabal path = do
   -- TODO handle in replaceWith
-  path' <- asks (flip replaceBaseName path . T.unpack . name)
+  path' <- asks (replaceBaseName path . T.unpack . name)
   -- TODO replaceWith convert
   contents <- liftIO $ readFile path
   contents' <- convert contents

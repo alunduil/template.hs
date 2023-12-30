@@ -6,7 +6,19 @@ import qualified Configuration as SUT
 import Data.Maybe (fromJust)
 import Defaults (Defaults (..))
 import Network.URI (parseURI)
-import Options.Applicative (ParserResult (CompletionInvoked, Failure, Success), defaultPrefs, execParserPure, helper, info, renderFailure, (<**>))
+import Options.Applicative
+  ( ParserResult
+      ( CompletionInvoked,
+        Failure,
+        Success
+      ),
+    defaultPrefs,
+    execParserPure,
+    helper,
+    info,
+    renderFailure,
+    (<**>),
+  )
 import System.Exit (ExitCode (ExitFailure))
 import Test.Hspec (Expectation, Spec, describe, expectationFailure, it, shouldBe)
 
@@ -15,9 +27,15 @@ spec =
   describe "Configuration" $ do
     describe "parser" $ do
       it "should error if homepage isn't a URI" $
-        parse ["--homepage", "not-a-url"] `shouldFailWith` ("", ExitFailure 1)
+        parse ["--homepage", "not-a-url"]
+          `shouldFailWith` ( "option --homepage: cannot parse value `not-a-url'\n\nUsage:  [--name NAME] [--homepage URL] [--author AUTHOR] \n        [--maintainer MAINTAINER] [--licence LICENCE]",
+                             ExitFailure 1
+                           )
       it "should error if licence isn't an SPDX licence ID" $ do
-        parse ["--licence", "not-a-licence"] `shouldFailWith` ("", ExitFailure 1)
+        parse ["--licence", "not-a-licence"]
+          `shouldFailWith` ( "option --licence: cannot parse value `not-a-licence'\n\nUsage:  [--name NAME] [--homepage URL] [--author AUTHOR] \n        [--maintainer MAINTAINER] [--licence LICENCE]",
+                             ExitFailure 1
+                           )
 
 parse :: [String] -> ParserResult SUT.Configuration
 parse =

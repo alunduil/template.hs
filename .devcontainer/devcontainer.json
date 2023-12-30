@@ -3,7 +3,9 @@
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
-    "ghcr.io/devcontainers-contrib/features/haskell:2": {},
+    "ghcr.io/devcontainers-contrib/features/haskell:2": {
+      "globalPackages": "cabal-fmt ormolu"
+    },
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
     "ghcr.io/devcontainers/features/github-cli:1": {}

@@ -1,13 +1,4 @@
-module Initialise
-  ( Initialise,
-    runInitialise,
-  )
-where
+module Initialise (Initialise, runInitialise, defaultInitialiser) where
 
-import Configuration (Configuration)
-import Control.Monad.Reader (ReaderT, runReaderT)
-
-type Initialise = ReaderT Configuration IO
-
-runInitialise :: Initialise a -> Configuration -> IO a
-runInitialise = runReaderT
+import Initialise.Initialisers
+import Initialise.Types

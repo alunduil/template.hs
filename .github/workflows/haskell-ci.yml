@@ -8,9 +8,9 @@
 #
 # For more information, see https://github.com/haskell-CI/haskell-ci
 #
-# version: 0.16.6
+# version: 0.16.3
 #
-# REGENDATA ("0.16.6",["github","--haddock","templatise.cabal"])
+# REGENDATA ("0.16.3",["github","--haddock","templatise.cabal"])
 #
 name: Haskell-CI
 on:
@@ -36,11 +36,6 @@ jobs:
           - compiler: ghc-9.4.5
             compilerKind: ghc
             compilerVersion: 9.4.5
-            setup-method: ghcup
-            allow-failure: false
-          - compiler: ghc-9.2.8
-            compilerKind: ghc
-            compilerVersion: 9.2.8
             setup-method: ghcup
             allow-failure: false
           - compiler: ghc-9.2.4

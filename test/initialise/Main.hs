@@ -1,9 +1,11 @@
 module Main (main) where
 
 import qualified CabalGolden (golden)
+import qualified ConfigurationSpec (spec)
 import qualified DefaultsSpec (spec)
 import qualified FileGolden (golden)
 import qualified GitSpec (spec)
+import qualified InitialiseSpec (spec)
 import Test.Tasty (defaultMain, testGroup)
 import Test.Tasty.Hspec (testSpecs)
 
@@ -13,8 +15,10 @@ main = do
     concat
       <$> mapM
         testSpecs
-        [ DefaultsSpec.spec,
-          GitSpec.spec
+        [ ConfigurationSpec.spec,
+          DefaultsSpec.spec,
+          GitSpec.spec,
+          InitialiseSpec.spec
         ]
   goldens <- sequence [CabalGolden.golden, FileGolden.golden]
   defaultMain $
