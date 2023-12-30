@@ -1,10 +1,10 @@
-module Main (main, main') where
+module Main (main) where
 
 import qualified Cabal (replace)
 import qualified Configuration (parser)
 import qualified Defaults (getDefaults)
 import qualified File (replace)
-import Initialise (Initialise, runInitialise)
+import Initialise (Initialise, defaultInitialiser, runInitialise)
 import qualified Licence (replace)
 import Options.Applicative (execParser, fullDesc, helper, info, progDesc, (<**>))
 import System.FilePath ((</>))
@@ -25,17 +25,4 @@ main = do
                 )
           )
 
-  execParser options >>= runInitialise main'
-
-main' :: Initialise ()
-main' = do
-  mapM_
-    File.replace
-    [ ".devcontainer" </> "devcontainer.json",
-      ".github" </> "workflows" </> "haskell-ci.yml",
-      "CHANGELOG.md"
-    ]
-  Licence.replace "LICENSE"
-  Cabal.replace "templatise.cabal"
-
--- TODO README
+  execParser options >>= runInitialise defaultInitialiser

@@ -8,7 +8,7 @@ import Control.Monad.Reader (MonadIO (liftIO), MonadReader (ask))
 import Data.Text (Text)
 import qualified Data.Text as T (replace)
 import Data.Text.IO (readFile, writeFile)
-import Initialise (Initialise)
+import Initialise.Types (Initialise)
 import Prelude hiding (readFile, writeFile)
 
 replace :: FilePath -> Initialise ()

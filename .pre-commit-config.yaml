@@ -21,7 +21,7 @@ repos:
         entry: haskell-ci regenerate
         language: haskell
         additional_dependencies:
-          - haskell-ci
+          - haskell-ci-0.16.3
         files: '(^.github/workflows/haskell-ci.yml$)|(\.cabal$)'
         pass_filenames: false
       - id: hlint
@@ -29,7 +29,7 @@ repos:
         entry: hlint
         language: haskell
         additional_dependencies:
-          - hlint
+          - hlint-3.6.1
         types_or: ["haskell", "literate-haskell"]
       - id: cabal check
         name: cabal check
@@ -42,7 +42,7 @@ repos:
         entry: ormolu
         language: haskell
         additional_dependencies:
-          - ormolu
+          - ormolu-0.7.3.0
         types_or: ["haskell", "literate-haskell"]
         args: ["-i", "-c"]
       - id: cabal-fmt
@@ -50,7 +50,7 @@ repos:
         entry: cabal-fmt
         language: haskell
         additional_dependencies:
-          - cabal-fmt
+          - cabal-fmt-0.1.9
         files: '\.cabal$'
         exclude: '\.golden\.cabal$'
         args: ["-i"]
