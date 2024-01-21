@@ -3,6 +3,8 @@
 module DefaultsSpec (spec) where
 
 import Data.Maybe (fromJust)
+import Data.Time (LocalTime (localDay), getCurrentTime, getCurrentTimeZone, utcToLocalTime)
+import Data.Time.Calendar.OrdinalDate (toOrdinalDate)
 import qualified Defaults as SUT
 import Hooks (withGitRepo)
 import Network.URI (parseURI)
@@ -19,13 +21,16 @@ spec = describe "Defaults" $ do
   describe "getDefaults" $ around withGitRepo $ do
     it "inspects the current repository" $ \p -> do
       ds <- SUT.getDefaults
+      -- TODO resolve code duplication with SUT.
+      timezone <- getCurrentTimeZone
+      (dYear, _day) <- toOrdinalDate . localDay . utcToLocalTime timezone <$> getCurrentTime
       ds
         `shouldBe` SUT.Defaults
           { SUT.dOrigin = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
             SUT.dAuthor = "Sentinel",
             SUT.dMaintainer = "sentinel@example.com",
             SUT.dPath = p,
-            SUT.dYear = 2023
+            SUT.dYear = dYear
           }
 
 defaults :: SUT.Defaults
