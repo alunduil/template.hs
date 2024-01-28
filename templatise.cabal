@@ -1,6 +1,6 @@
 cabal-version:      3.0
 name:               templatise
-version:            0.1.1.0
+version:            0.1.2.0
 license:            Unlicense
 license-file:       LICENSE
 copyright:          (c) 2023 Alex Brandt
