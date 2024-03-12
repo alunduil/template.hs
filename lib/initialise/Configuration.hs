@@ -39,61 +39,69 @@ data Configuration = Configuration
 
 parser :: Defaults -> Parser Configuration
 parser ds@(Defaults {..}) =
-  Configuration
-    <$> strOption
-      ( long "name"
-          <> help "Name of the new project."
-          <> metavar "NAME"
-          <> value (dName ds)
-          <> showDefault
-      )
-    <*> option
-      (maybeReader parseURI)
-      ( long "homepage"
-          <> help "Homepage of the new project."
-          <> metavar "URL"
-          <> value (dHomePage ds)
-          <> showDefault
-      )
-    <*> strOption
-      ( long "author"
-          <> help "Name of the author of the project."
-          <> metavar "AUTHOR"
-          <> value dAuthor
-          <> showDefault
-      )
-    <*> strOption
-      ( long "maintainer"
-          <> help "Email of the maintainer of the project."
-          <> metavar "MAINTAINER"
-          <> value dMaintainer
-          <> showDefault
-      )
-    <*> option
-      auto
-      ( long "licence"
-          <> help "Licence of the project."
-          <> value Unlicense
-          <> showDefault
-          <> metavar "LICENCE"
-      )
-    <*> option
-      auto
-      ( long "path"
-          <> help "Project path.  Only used for testing."
-          <> value dPath
-          <> showDefault
-          <> metavar "PATH"
-          <> hidden
-          <> internal
-      )
-    <*> option
-      auto
-      ( long "year"
-          <> help "Copyright year.  Only used for testing."
-          <> value dYear
-          <> showDefault
-          <> metavar "YEAR"
-          <> hidden
-          <> internal
-      )
+  Configuration <$> name <*> homepage <*> author <*> maintainer <*> licence <*> path <*> year
+  where
+    name =
+      strOption
+        ( long "name"
+            <> help "Name of the new project."
+            <> metavar "NAME"
+            <> value (dName ds)
+            <> showDefault
+        )
+    homepage =
+      option
+        (maybeReader parseURI)
+        ( long "homepage"
+            <> help "Homepage of the new project."
+            <> metavar "URL"
+            <> value (dHomePage ds)
+            <> showDefault
+        )
+    author =
+      strOption
+        ( long "author"
+            <> help "Name of the author of the project."
+            <> metavar "AUTHOR"
+            <> value dAuthor
+            <> showDefault
+        )
+    maintainer =
+      strOption
+        ( long "maintainer"
+            <> help "Email of the maintainer of the project."
+            <> metavar "MAINTAINER"
+            <> value dMaintainer
+            <> showDefault
+        )
+    licence =
+      option
+        auto
+        ( long "licence"
+            <> help "Licence of the project."
+            <> value Unlicense
+            <> showDefault
+            <> metavar "LICENCE"
+        )
+    path =
+      option
+        auto
+        ( long "path"
+            <> help "Project path.  Only used for testing."
+            <> value dPath
+            <> showDefault
+            <> metavar "PATH"
+            <> hidden
+            <> internal
+        )
+    year =
+      option
+        auto
+        ( long "year"
+            <> help "Copyright year.  Only used for testing."
+            <> value dYear
+            <> showDefault
+            <> metavar "YEAR"
+            <> hidden
+            <> internal
+        )
