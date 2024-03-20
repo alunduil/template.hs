@@ -1,13 +1,9 @@
 module Main (main) where
 
-import qualified Cabal (replace)
 import qualified Configuration (parser)
 import qualified Defaults (getDefaults)
-import qualified File (replace)
-import Initialise (Initialise, defaultInitialiser, runInitialise)
-import qualified Licence (replace)
+import Initialiser (defaultInitialiser, runInitialiser)
 import Options.Applicative (execParser, fullDesc, helper, info, progDesc, (<**>))
-import System.FilePath ((</>))
 
 main :: IO ()
 main = do
@@ -25,4 +21,4 @@ main = do
                 )
           )
 
-  execParser options >>= runInitialise defaultInitialiser
+  execParser options >>= runInitialiser defaultInitialiser

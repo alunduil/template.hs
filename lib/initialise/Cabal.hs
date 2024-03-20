@@ -28,7 +28,7 @@ import Distribution.Fields
 import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
 import Distribution.SPDX (licenseId)
-import Initialise.Types (Initialise)
+import Initialiser.Types (Initialiser)
 import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
 import System.FilePath (replaceBaseName, (</>))
 import Text.Parsec.Error (ParseError)
@@ -36,14 +36,14 @@ import Prelude hiding (concat, readFile, unlines, writeFile)
 
 instance Exception ParseError
 
-replace :: FilePath -> Initialise ()
+replace :: FilePath -> Initialiser ()
 replace path = do
   replaceCabal path
   "lib" `replaceDirectoryWith` replaceLib
   "test" `replaceDirectoryWith` replaceTest
   "bin" `replaceDirectoryWith` replaceBin
 
-replaceCabal :: FilePath -> Initialise ()
+replaceCabal :: FilePath -> Initialiser ()
 replaceCabal path = do
   -- TODO handle in replaceWith
   path' <- asks (replaceBaseName path . T.unpack . name)
@@ -54,12 +54,12 @@ replaceCabal path = do
   -- TODO handle in replaceWith
   liftIO $ removeFile path
 
-convert :: ByteString -> Initialise Text
+convert :: ByteString -> Initialiser Text
 convert contents = do
   fs <- either throwM pure (readFields contents)
   T.pack . showFields (const NoComment) . fromParsecFields <$> mapM convert' fs
 
-convert' :: Field Position -> Initialise (Field Position)
+convert' :: Field Position -> Initialiser (Field Position)
 convert' f@(Field n@(Name _ fName) ls) = do
   Configuration {..} <- asks id
   case fName of
@@ -109,7 +109,7 @@ convertString r s = case token `stripPrefix` rest of
     token = "initialise"
 
 -- TODO Move to Initialise module?
-replaceDirectoryWith :: FilePath -> (FilePath -> Initialise ()) -> Initialise ()
+replaceDirectoryWith :: FilePath -> (FilePath -> Initialiser ()) -> Initialiser ()
 replaceDirectoryWith component r = do
   name' <- asks name
   path' <- asks ((</> component </> T.unpack name') . path)
@@ -117,10 +117,10 @@ replaceDirectoryWith component r = do
   r path'
   liftIO $ removeDirectoryRecursive $ replaceBaseName "initialise" path'
 
-replaceLib :: FilePath -> Initialise ()
+replaceLib :: FilePath -> Initialiser ()
 replaceLib _path = pure ()
 
-replaceTest :: FilePath -> Initialise ()
+replaceTest :: FilePath -> Initialiser ()
 replaceTest path = do
   name' <- asks name
   -- TODO Template library.
@@ -135,7 +135,7 @@ replaceTest path = do
           "main = defaultMain $ testGroup \"" <> name' <> "-library\" []"
         ]
 
-replaceBin :: FilePath -> Initialise ()
+replaceBin :: FilePath -> Initialiser ()
 replaceBin path = do
   name' <- asks name
   -- TODO Template library.(*)

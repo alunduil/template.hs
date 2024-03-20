@@ -10,7 +10,7 @@ import Data.Text.Lazy (fromStrict)
 import Data.Text.Lazy.Encoding (encodeUtf8)
 import Distribution.SPDX.LicenseId (LicenseId (MIT))
 import qualified File as SUT
-import Initialise (runInitialise)
+import Initialiser (runInitialiser)
 import Network.URI (parseURI)
 import System.FilePath (isExtensionOf, normalise, replaceExtension, takeBaseName, takeExtension)
 import Test.Tasty (TestTree, testGroup)
@@ -43,7 +43,7 @@ convertTest p = goldenVsStringDiff n diff gold action
     gold = p `replaceExtension` ".golden" ++ takeExtension p
     action = do
       contents <- liftIO (readFile p)
-      encodeUtf8 . fromStrict <$> runInitialise (SUT.convert contents) configuration
+      encodeUtf8 . fromStrict <$> runInitialiser (SUT.convert contents) configuration
     configuration =
       Configuration
         { name = "sentinel",
