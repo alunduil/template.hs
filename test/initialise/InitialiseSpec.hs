@@ -7,7 +7,7 @@ import Data.Maybe (fromJust)
 import Data.Text (Text, pack)
 import Distribution.SPDX (LicenseId (MIT))
 import Hooks (withProjectCopy)
-import qualified Initialise as SUT
+import qualified Initialiser as SUT
 import Network.URI (parseURI)
 import System.Directory (doesFileExist)
 import System.FilePath ((</>))
@@ -29,7 +29,7 @@ spec = describe "Initialisers" $ do
                 year = 1970
               }
 
-      SUT.runInitialise SUT.defaultInitialiser configuration
+      SUT.runInitialiser SUT.defaultInitialiser configuration
 
       doesFileExist (p </> "templatise.cabal") `shouldReturn` False
       doesFileExist (p </> "sentinel.cabal") `shouldReturn` True

@@ -7,13 +7,13 @@ import Control.Monad (unless)
 import Control.Monad.Reader (ask, liftIO)
 import Data.ByteString.Lazy (ByteString, writeFile)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense), licenseId)
-import Initialise.Types (Initialise)
+import Initialiser.Types (Initialiser)
 import Network.HTTP.Client (responseBody)
 import Network.HTTP.Simple (httpLBS, parseRequest)
 import System.FilePath ((</>))
 import Prelude hiding (writeFile)
 
-replace :: FilePath -> Initialise ()
+replace :: FilePath -> Initialiser ()
 replace p = do
   Configuration {..} <- ask
   unless (licence == Unlicense) $

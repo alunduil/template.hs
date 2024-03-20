@@ -66,13 +66,13 @@ library initialise-library
     Defaults
     File
     Git
-    Initialise
+    Initialiser
     Licence
 
   -- TODO Make Git private.
   other-modules:
-    Initialise.Initialisers
-    Initialise.Types
+    Initialiser.Initialisers
+    Initialiser.Types
 
   build-depends:
     , exceptions    ^>=0.10.4
