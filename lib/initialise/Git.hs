@@ -1,4 +1,8 @@
-module Git (config, root) where
+module Git
+  ( config,
+    root,
+  )
+where
 
 import Data.Text (Text, pack, unpack)
 import System.Process (readProcess)

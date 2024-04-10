@@ -9,19 +9,13 @@ where
 import Configuration (Configuration)
 import Control.Monad.Catch (MonadThrow)
 import Control.Monad.IO.Class (MonadIO)
+import Control.Monad.Logger (LoggingT, MonadLogger, runStderrLoggingT)
 import Control.Monad.Reader (MonadReader, ReaderT, runReaderT)
 
 newtype Initialiser a = Initialiser
-  { run :: ReaderT Configuration IO a
+  { run :: LoggingT (ReaderT Configuration IO) a
   }
-  deriving
-    ( Functor,
-      Applicative,
-      Monad,
-      MonadIO,
-      MonadThrow,
-      MonadReader Configuration
-    )
+  deriving (Applicative, Functor, Monad, MonadIO, MonadLogger, MonadReader Configuration, MonadThrow)
 
 runInitialiser :: Initialiser a -> Configuration -> IO a
-runInitialiser initialiser = runReaderT (run initialiser)
+runInitialiser initialiser = runReaderT (runStderrLoggingT $ run initialiser)

@@ -1,6 +1,7 @@
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 {-# OPTIONS_GHC -Wno-orphans #-}
 
 module Cabal (replace, convert) where
@@ -8,7 +9,8 @@ module Cabal (replace, convert) where
 import Configuration (Configuration (..))
 import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
-import Control.Monad.Reader (asks, liftIO)
+import Control.Monad.Logger (logInfo)
+import Control.Monad.Reader (MonadReader (ask), asks, liftIO)
 import Data.ByteString (ByteString, append, breakSubstring, concat, readFile, stripPrefix)
 import qualified Data.ByteString.Char8 as BS (pack)
 import Data.Text (Text, unlines)
@@ -47,6 +49,7 @@ replaceCabal :: FilePath -> Initialiser ()
 replaceCabal path = do
   -- TODO handle in replaceWith
   path' <- asks (replaceBaseName path . T.unpack . name)
+  $logInfo ("replacing cabal " <> T.pack (show path) <> " with " <> T.pack (show path'))
   -- TODO replaceWith convert
   contents <- liftIO $ readFile path
   contents' <- convert contents
@@ -111,11 +114,13 @@ convertString r s = case token `stripPrefix` rest of
 -- TODO Move to Initialise module?
 replaceDirectoryWith :: FilePath -> (FilePath -> Initialiser ()) -> Initialiser ()
 replaceDirectoryWith component r = do
-  name' <- asks name
-  path' <- asks ((</> component </> T.unpack name') . path)
-  liftIO $ createDirectoryIfMissing True path'
-  r path'
-  liftIO $ removeDirectoryRecursive $ replaceBaseName "initialise" path'
+  Configuration {..} <- ask
+  let new = component </> T.unpack name
+  let original = component </> "initialise"
+  $logInfo ("replacing directory " <> T.pack (show original) <> " with " <> T.pack (show new))
+  liftIO $ createDirectoryIfMissing True $ path </> new
+  r $ path </> new
+  liftIO $ removeDirectoryRecursive $ path </> original
 
 replaceLib :: FilePath -> Initialiser ()
 replaceLib _path = pure ()
