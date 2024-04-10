@@ -1,22 +1,29 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TemplateHaskell #-}
 
-module File (replace, convert) where
+module File
+  ( replace,
+    convert,
+  )
+where
 
 import Configuration (Configuration (..))
+import Control.Monad.Logger (logInfo)
 import Control.Monad.Reader (MonadIO (liftIO), MonadReader (ask))
-import Data.Text (Text)
+import Data.Text (Text, pack)
 import qualified Data.Text as T (replace)
 import Data.Text.IO (readFile, writeFile)
 import Initialiser.Types (Initialiser)
 import Prelude hiding (readFile, writeFile)
 
 replace :: FilePath -> Initialiser ()
-replace path = do
+replace p = do
+  $logInfo ("replacing file " <> pack (show p))
   -- TODO replaceWith convert
-  contents <- liftIO $ readFile path
+  contents <- liftIO $ readFile p
   contents' <- convert contents
-  liftIO $ writeFile path contents'
+  liftIO $ writeFile p contents'
 
 convert :: Text -> Initialiser Text
 convert contents = do
