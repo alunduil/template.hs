@@ -7,6 +7,8 @@ module Configuration
   )
 where
 
+import Control.Monad.Logger (LogLevel)
+import Control.Monad.Logger.CallStack (LogLevel (LevelWarn))
 import Data.Text (Text)
 import Data.Time.Calendar (Year)
 import Defaults (Defaults (..), dHomePage, dName)
@@ -36,12 +38,13 @@ data Configuration = Configuration
     maintainer :: Text,
     licence :: LicenseId,
     path :: FilePath,
-    year :: Year
+    year :: Year,
+    verbosity :: LogLevel
   }
 
 parser :: Defaults -> Parser Configuration
 parser ds@(Defaults {..}) =
-  Configuration <$> name <*> homepage <*> author <*> maintainer <*> licence <*> path <*> year
+  Configuration <$> name <*> homepage <*> author <*> maintainer <*> licence <*> path <*> year <*> verbosity
   where
     name =
       strOption
@@ -104,6 +107,15 @@ parser ds@(Defaults {..}) =
             <> metavar "YEAR"
             <> hidden
             <> internal
+        )
+    verbosity =
+      option
+        auto
+        ( long "verbosity"
+            <> help "Verbosity of information printed to stderr."
+            <> value LevelWarn
+            <> showDefault
+            <> metavar "VERBOSITY"
         )
 
 maybeDefault :: (HasValue f, Show a) => Maybe a -> Mod f a

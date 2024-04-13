@@ -4,6 +4,7 @@ module CabalGolden (golden) where
 
 import qualified Cabal as SUT
 import Configuration (Configuration (..))
+import Control.Monad.Logger (LogLevel (LevelDebug))
 import Control.Monad.Reader (liftIO)
 import Data.ByteString (readFile)
 import Data.ByteString.Lazy.Char8 (pack)
@@ -43,5 +44,6 @@ convertTest p = goldenVsStringDiff n diff gold action
           maintainer = "sentinel@example.com",
           licence = MIT,
           path = ".",
-          year = 1970
+          year = 1970,
+          verbosity = LevelDebug
         }
