@@ -32,7 +32,7 @@ spec =
                                  [ "option --homepage: cannot parse value `not-a-url'",
                                    "",
                                    "Usage:  [--name NAME] [--homepage URL] [--author AUTHOR] ",
-                                   "        [--maintainer MAINTAINER] [--licence LICENCE]"
+                                   "        [--maintainer MAINTAINER] [--licence LICENCE] [--verbosity VERBOSITY]"
                                  ],
                              ExitFailure 1
                            )
@@ -43,7 +43,7 @@ spec =
                                  [ "option --licence: cannot parse value `not-a-licence'",
                                    "",
                                    "Usage:  [--name NAME] [--homepage URL] [--author AUTHOR] ",
-                                   "        [--maintainer MAINTAINER] [--licence LICENCE]"
+                                   "        [--maintainer MAINTAINER] [--licence LICENCE] [--verbosity VERBOSITY]"
                                  ],
                              ExitFailure 1
                            )
