@@ -9,18 +9,19 @@ module Defaults
   )
 where
 
-import Data.Maybe (fromJust)
-import Data.Text (Text, pack, unpack)
+import Control.Applicative ((<|>))
+import Data.Maybe (fromMaybe)
+import Data.Text (Text, pack, replace, stripPrefix, unpack)
 import Data.Time (LocalTime (localDay), getCurrentTime, getCurrentTimeZone, utcToLocalTime)
 import Data.Time.Calendar (Year)
 import Data.Time.Calendar.OrdinalDate (toOrdinalDate)
 import qualified Git (config)
 import Network.URI (URI (uriPath), parseURI)
 import System.Directory.Extra (getCurrentDirectory)
-import System.FilePath (dropExtension, takeBaseName)
+import System.FilePath (stripExtension, takeFileName)
 
 data Defaults = Defaults
-  { dOrigin :: URI,
+  { dOrigin :: Text,
     dAuthor :: Text,
     dMaintainer :: Text,
     dPath :: FilePath,
@@ -28,18 +29,27 @@ data Defaults = Defaults
   }
   deriving (Show, Eq)
 
-dName :: Defaults -> Text
-dName Defaults {..} = pack . takeBaseName . uriPath $ dOrigin
+dName :: Defaults -> Maybe Text
+dName = fmap toName . dHomePage
+  where
+    toName = pack . takeFileName . uriPath
 
-dHomePage :: Defaults -> URI
+dHomePage :: Defaults -> Maybe URI
 dHomePage Defaults {..} =
-  dOrigin
-    { uriPath = dropExtension $ uriPath dOrigin
-    }
+  stripURIExtension "git"
+    <$> ( toURI dOrigin
+            <|> (toURI =<< sshToHttp dOrigin)
+        )
+  where
+    sshToHttp = fmap (("http://" <>) . replace ":" "/") . stripPrefix "git@"
+    toURI = parseURI . unpack
+    stripURIExtension ext uri =
+      let p = uriPath uri
+       in uri {uriPath = fromMaybe p (stripExtension ext p)}
 
 getDefaults :: IO Defaults
 getDefaults = do
-  dOrigin <- fromJust . parseURI . unpack <$> Git.config "remote.origin.url"
+  dOrigin <- Git.config "remote.origin.url"
   dAuthor <- Git.config "user.name"
   dMaintainer <- Git.config "user.email"
   dPath <- getCurrentDirectory
