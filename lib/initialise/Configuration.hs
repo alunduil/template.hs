@@ -13,7 +13,9 @@ import Defaults (Defaults (..), dHomePage, dName)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
 import Network.URI (URI, parseURI)
 import Options.Applicative
-  ( Parser,
+  ( HasValue,
+    Mod,
+    Parser,
     auto,
     help,
     hidden,
@@ -46,8 +48,7 @@ parser ds@(Defaults {..}) =
         ( long "name"
             <> help "Name of the new project."
             <> metavar "NAME"
-            <> value (dName ds)
-            <> showDefault
+            <> maybeDefault (dName ds)
         )
     homepage =
       option
@@ -55,8 +56,7 @@ parser ds@(Defaults {..}) =
         ( long "homepage"
             <> help "Homepage of the new project."
             <> metavar "URL"
-            <> value (dHomePage ds)
-            <> showDefault
+            <> maybeDefault (dHomePage ds)
         )
     author =
       strOption
@@ -105,3 +105,7 @@ parser ds@(Defaults {..}) =
             <> hidden
             <> internal
         )
+
+maybeDefault :: (HasValue f, Show a) => Maybe a -> Mod f a
+maybeDefault (Just a) = value a <> showDefault
+maybeDefault Nothing = mempty
