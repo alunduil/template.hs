@@ -21,7 +21,7 @@ repos:
         entry: haskell-ci regenerate
         language: haskell
         additional_dependencies:
-          - haskell-ci-0.16.3
+          - haskell-ci-0.18.1
         files: '(^.github/workflows/haskell-ci.yml$)|(\.cabal$)'
         pass_filenames: false
       - id: hlint
