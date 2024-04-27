@@ -3,6 +3,7 @@
 module InitialiseSpec (spec) where
 
 import Configuration (Configuration (..))
+import Control.Monad.Logger (LogLevel (LevelDebug))
 import Data.Maybe (fromJust)
 import Data.Text (Text, pack)
 import Distribution.SPDX (LicenseId (MIT))
@@ -21,12 +22,14 @@ spec = describe "Initialisers" $ do
       let configuration =
             Configuration
               { name = "sentinel",
+                cabalName = "sentinel",
                 homepage = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
                 author = "Sentinel",
                 maintainer = "sentinel@example.com",
                 licence = MIT,
                 path = p,
-                year = 1970
+                year = 1970,
+                verbosity = LevelDebug
               }
 
       SUT.runInitialiser SUT.defaultInitialiser configuration

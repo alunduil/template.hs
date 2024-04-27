@@ -29,22 +29,22 @@ spec =
         parse ["--homepage", "not-a-url"]
           `shouldFailWith` ( strip $
                                unlines
-                                 [ "option --homepage: cannot parse value `not-a-url'",
-                                   "",
-                                   "Usage:  [--name NAME] [--homepage URL] [--author AUTHOR] ",
-                                   "        [--maintainer MAINTAINER] [--licence LICENCE] [--verbosity VERBOSITY]"
-                                 ],
+                                 ( [ "option --homepage: cannot parse value `not-a-url'",
+                                     ""
+                                   ]
+                                     <> usage
+                                 ),
                              ExitFailure 1
                            )
       it "should error if licence isn't an SPDX licence ID" $ do
         parse ["--licence", "not-a-licence"]
           `shouldFailWith` ( strip $
                                unlines
-                                 [ "option --licence: cannot parse value `not-a-licence'",
-                                   "",
-                                   "Usage:  [--name NAME] [--homepage URL] [--author AUTHOR] ",
-                                   "        [--maintainer MAINTAINER] [--licence LICENCE] [--verbosity VERBOSITY]"
-                                 ],
+                                 ( [ "option --licence: cannot parse value `not-a-licence'",
+                                     ""
+                                   ]
+                                     <> usage
+                                 ),
                              ExitFailure 1
                            )
 
@@ -69,3 +69,11 @@ defaults =
       dPath = ".",
       dYear = 1970
     }
+
+-- TODO ask the parser for the usage string.
+usage :: [String]
+usage =
+  [ "Usage:  [--name NAME] [--cabal-name CABAL_NAME] [--homepage URL] ",
+    "        [--author AUTHOR] [--maintainer MAINTAINER] [--licence LICENCE] ",
+    "        [--verbosity VERBOSITY]"
+  ]

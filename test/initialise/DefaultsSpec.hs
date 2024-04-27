@@ -39,6 +39,11 @@ spec = describe "Defaults" $ do
             SUT.dPath = p,
             SUT.dYear = dYear
           }
+  describe "isValidPackageName" $ do
+    it "accepts a valid package name" $
+      SUT.isValidPackageName "sentinel" `shouldBe` True
+    it "rejects an invalid package name" $
+      SUT.isValidPackageName "sentinel.ext" `shouldBe` False
 
 httpOrigin :: SUT.Defaults
 httpOrigin =

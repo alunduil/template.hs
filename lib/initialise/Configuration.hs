@@ -11,7 +11,7 @@ import Control.Monad.Logger (LogLevel)
 import Control.Monad.Logger.CallStack (LogLevel (LevelWarn))
 import Data.Text (Text)
 import Data.Time.Calendar (Year)
-import Defaults (Defaults (..), dHomePage, dName)
+import Defaults (Defaults (..), dCabalName, dHomePage, dName)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
 import Network.URI (URI, parseURI)
 import Options.Applicative
@@ -33,6 +33,7 @@ import Options.Applicative.Builder (maybeReader)
 
 data Configuration = Configuration
   { name :: Text,
+    cabalName :: Text,
     homepage :: URI,
     author :: Text,
     maintainer :: Text,
@@ -44,7 +45,16 @@ data Configuration = Configuration
 
 parser :: Defaults -> Parser Configuration
 parser ds@(Defaults {..}) =
-  Configuration <$> name <*> homepage <*> author <*> maintainer <*> licence <*> path <*> year <*> verbosity
+  Configuration
+    <$> name
+    <*> cabalName
+    <*> homepage
+    <*> author
+    <*> maintainer
+    <*> licence
+    <*> path
+    <*> year
+    <*> verbosity
   where
     name =
       strOption
@@ -52,6 +62,13 @@ parser ds@(Defaults {..}) =
             <> help "Name of the new project."
             <> metavar "NAME"
             <> maybeDefault (dName ds)
+        )
+    cabalName =
+      strOption
+        ( long "cabal-name"
+            <> help "Name to use in cabal."
+            <> metavar "CABAL_NAME"
+            <> maybeDefault (dCabalName ds)
         )
     homepage =
       option

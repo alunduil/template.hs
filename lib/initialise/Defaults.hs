@@ -6,6 +6,8 @@ module Defaults
     Defaults (..),
     dName,
     dHomePage,
+    dCabalName,
+    isValidPackageName,
   )
 where
 
@@ -19,6 +21,7 @@ import qualified Git (config)
 import Network.URI (URI (uriPath), parseURI)
 import System.Directory.Extra (getCurrentDirectory)
 import System.FilePath (stripExtension, takeFileName)
+import Text.Regex.TDFA ((=~))
 
 data Defaults = Defaults
   { dOrigin :: Text,
@@ -33,6 +36,11 @@ dName :: Defaults -> Maybe Text
 dName = fmap toName . dHomePage
   where
     toName = pack . takeFileName . uriPath
+
+dCabalName :: Defaults -> Maybe Text
+dCabalName ds = do
+  name <- dName ds
+  if isValidPackageName name then Just name else Nothing
 
 dHomePage :: Defaults -> Maybe URI
 dHomePage Defaults {..} =
@@ -56,3 +64,7 @@ getDefaults = do
   timezone <- getCurrentTimeZone
   (dYear, _day) <- toOrdinalDate . localDay . utcToLocalTime timezone <$> getCurrentTime
   pure Defaults {..}
+
+-- TODO move to a validators module
+isValidPackageName :: Text -> Bool
+isValidPackageName = (=~ ("^[[:digit:]]*[[:alpha:]][[:alnum:]]*(-[[:digit:]]*[[:alpha:]][[:alnum:]]*)*$" :: String))
