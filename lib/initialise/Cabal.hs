@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
@@ -33,10 +34,12 @@ import Distribution.SPDX (licenseId)
 import Initialiser.Types (Initialiser)
 import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
 import System.FilePath (replaceBaseName, (</>))
-import Text.Parsec.Error (ParseError)
 import Prelude hiding (concat, readFile, unlines, writeFile)
 
+#if __GLASGOW_HASKELL__ < 908
+import Text.Parsec.Error (ParseError)
 instance Exception ParseError
+#endif
 
 replace :: FilePath -> Initialiser ()
 replace path = do
