@@ -70,7 +70,7 @@ convert' f@(Field n@(Name _ fName) ls) = do
   Configuration {..} <- asks id
   case fName of
     -- package
-    "name" -> field (encodeUtf8 name)
+    "name" -> field (encodeUtf8 cabalName)
     "version" -> field "0.1.0.0"
     "license" -> field (BS.pack $ licenseId licence)
     "copyright" -> field (BS.pack $ unwords ["(c)", show year, T.unpack author])

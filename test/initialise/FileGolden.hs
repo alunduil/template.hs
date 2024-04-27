@@ -3,6 +3,7 @@
 module FileGolden (golden) where
 
 import Configuration (Configuration (..))
+import Control.Monad.Logger (LogLevel (LevelDebug))
 import Control.Monad.Reader (liftIO)
 import Data.Maybe (fromJust)
 import Data.Text.IO (readFile)
@@ -47,10 +48,12 @@ convertTest p = goldenVsStringDiff n diff gold action
     configuration =
       Configuration
         { name = "sentinel",
+          cabalName = "sentinel",
           homepage = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
           author = "Sentinel",
           maintainer = "sentinel@example.com",
           licence = MIT,
           path = ".",
-          year = 1970
+          year = 1970,
+          verbosity = LevelDebug
         }

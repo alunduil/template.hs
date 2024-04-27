@@ -39,6 +39,7 @@ convertTest p = goldenVsStringDiff n diff gold action
     configuration =
       Configuration
         { name = "sentinel",
+          cabalName = "sentinel",
           homepage = fromJust (parseURI "https://github.com/sentinel/sentinel.git"),
           author = "Sentinel",
           maintainer = "sentinel@example.com",
