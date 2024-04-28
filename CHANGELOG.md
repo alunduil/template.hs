@@ -9,6 +9,7 @@
 * Test GHC 9.8.2, 9.8.1, 9.6.4, 9.6.3, 9.6.1, 9.4.8, 9.4.7, 9.4.6, 9.4.4, 9.4.3,
   9.4.2, and 9.4.1
 * Add support for text-2.0.1
+* Add support for Cabal-syntax-3.12.0.0
 
 ### Changed
 
