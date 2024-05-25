@@ -17,7 +17,9 @@ description:
   have Haskell, VS Code devcontainers, and various GitHub actions ready to use.
 
 category:           VSCode
-tested-with:        GHC >=9.4 && <9.5 || >=9.6 && <9.7 || >=9.8 && <9.9
+tested-with:
+  GHC >=9.4 && <9.5 || >=9.6 && <9.7 || >=9.8 && <9.9 || >=9.10 && <9.11
+
 extra-source-files:
   .devcontainer/devcontainer.json
   .github/workflows/*.yml
