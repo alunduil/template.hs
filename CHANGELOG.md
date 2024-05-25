@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 0.1.3.0 -- 2024-05-25
+
 ### Added
 
 * --cabal-name option to specify a Cabal friendly name independent from the
