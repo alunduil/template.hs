@@ -2,6 +2,14 @@
 
 ## unreleased
 
+### Added
+
+* Test GHC 9.10
+
+### Deprecated
+
+* Test GHC 9.4
+
 ## 0.1.3.0 -- 2024-05-25
 
 ### Added
