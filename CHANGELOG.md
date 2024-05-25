@@ -5,6 +5,7 @@
 ### Added
 
 * Test GHC 9.10
+* Support for base 4.20
 
 ### Deprecated
 
