@@ -18,14 +18,12 @@ repos:
     rev: v3.3.1
     hooks:
       - id: vale
-        exclude: '^(styles/|LICENSE$|\.envrc$)'
+        exclude: '(CHANGELOG.*\.md$)|(\.cabal$)|^(styles/|LICENSE$|\.envrc$)'
         exclude_types:
           - gitignore
+          - haskell
           - ini
           - json
-          - nix
-          - python
-          - toml
           - yaml
   - repo: local
     hooks:
