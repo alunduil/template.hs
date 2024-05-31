@@ -8,7 +8,6 @@
 module Cabal (replace, convert) where
 
 import Configuration (Configuration (..))
-import Control.Exception (Exception)
 import Control.Monad.Catch (throwM)
 import Control.Monad.Logger (logInfo)
 import Control.Monad.Reader (MonadReader (ask), asks, liftIO)
@@ -37,6 +36,7 @@ import System.FilePath (replaceBaseName, (</>))
 import Prelude hiding (concat, readFile, unlines, writeFile)
 
 #if __GLASGOW_HASKELL__ < 908
+import Control.Exception (Exception)
 import Text.Parsec.Error (ParseError)
 instance Exception ParseError
 #endif
