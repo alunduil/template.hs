@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 0.1.4.0 -- 2024-06-01
+
 ### Added
 
 * Test GHC 9.10
