@@ -10,7 +10,7 @@ import Distribution.SPDX (LicenseId (MIT))
 import Hooks (withProjectCopy)
 import qualified Initialiser as SUT
 import Network.URI (parseURI)
-import System.Directory (doesFileExist)
+import System.Directory (doesDirectoryExist, doesFileExist)
 import System.FilePath ((</>))
 import System.Process (readProcess)
 import Test.Hspec (Spec, describe, runIO, shouldNotReturn, shouldReturn)
@@ -36,6 +36,15 @@ spec = describe "Initialisers" $ do
 
       doesFileExist (p </> "templatise.cabal") `shouldReturn` False
       doesFileExist (p </> "sentinel.cabal") `shouldReturn` True
+
+      doesDirectoryExist (p </> "bin" </> "initialise") `shouldReturn` False
+      doesFileExist (p </> "bin" </> "sentinel" </> "Main.hs") `shouldReturn` True
+
+      doesDirectoryExist (p </> "lib" </> "initialise") `shouldReturn` False
+      doesDirectoryExist (p </> "lib" </> "sentinel") `shouldReturn` True
+
+      doesDirectoryExist (p </> "test" </> "initialise") `shouldReturn` False
+      doesFileExist (p </> "test" </> "sentinel" </> "Main.hs") `shouldReturn` True
 
       grep ["MIT"] [p </> "LICENSE"] `shouldNotReturn` []
 
