@@ -32,4 +32,5 @@ convert contents = do
     . T.replace "templatise" name
     . T.replace "template-hs" name
     . T.replace "template.hs" name
+    . T.replace "initialise" name
     $ contents

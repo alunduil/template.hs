@@ -13,9 +13,11 @@ defaultInitialiser :: Initialiser ()
 defaultInitialiser = do
   mapM_
     File.replace
-    [ ".devcontainer" </> "devcontainer.json",
+    [ "CHANGELOG.md",
+      ".devcontainer" </> "devcontainer.json",
       ".github" </> "workflows" </> "haskell-ci.yml",
-      "CHANGELOG.md"
+      ".vscode" </> "launch.json",
+      ".vscode" </> "tasks.json"
     ]
   Licence.replace "LICENSE"
   Cabal.replace "templatise.cabal"

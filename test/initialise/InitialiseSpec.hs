@@ -58,10 +58,12 @@ spec = describe "Initialisers" $ do
       let fs =
             map
               (p </>)
-              [ ".devcontainer" </> "devcontainer.json",
+              [ "CHANGELOG.md",
+                ".devcontainer" </> "devcontainer.json",
                 ".github" </> "workflows" </> "haskell-ci.yml",
-                "CHANGELOG.md",
-                "sentinel.cabal"
+                "sentinel.cabal",
+                ".vscode" </> "launch.json",
+                ".vscode" </> "tasks.json"
               ]
 
       grep ps fs `shouldReturn` []
