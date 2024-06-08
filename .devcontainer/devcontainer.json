@@ -4,7 +4,7 @@
   // Features to add to the dev container. More info: https://containers.dev/features.
   "features": {
     "ghcr.io/devcontainers-contrib/features/haskell:2": {
-      "globalPackages": "cabal-fmt ormolu"
+      "globalPackages": "cabal-fmt ormolu ghci-dap haskell-debug-adapter"
     },
     "ghcr.io/devcontainers-contrib/features/pre-commit:2": {},
     "ghcr.io/devcontainers/features/git:1": {},
@@ -27,7 +27,8 @@
         "github.vscode-github-actions",
         "GitHub.vscode-pull-request-github",
         "haskell.haskell",
-        "ms-azuretools.vscode-docker"
+        "ms-azuretools.vscode-docker",
+        "phoityne.phoityne-vscode"
       ]
     }
   },
