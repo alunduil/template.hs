@@ -6,6 +6,10 @@
 
 * vscode configuration for debugging with cabal
 
+### Removed
+
+* Test GHC 9.4
+
 ## 0.1.4.0 -- 2024-06-01
 
 ### Added
