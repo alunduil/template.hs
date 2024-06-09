@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 0.1.5.0 -- 2024-06-09
+
 ### Added
 
 * vscode configuration for debugging with cabal
