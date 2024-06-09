@@ -5,7 +5,9 @@ on:
     types: [published]
 
 permissions:
+  attestations: write
   contents: read
+  id-token: write
 
 jobs:
   publish:
@@ -15,5 +17,9 @@ jobs:
       - uses: haskell-actions/setup@v2
       - name: cabal sdist
         run: cabal sdist
+      - name: Attest Build Provenance
+        uses: actions/attest-build-provenance@897ed5eab6ed058a474202017ada7f40bfa52940 # v1.0.0
+        with:
+          subject-path: "dist-newstyle/sdist/*.tar.gz"
       - name: cabal upload
         run: cabal upload --publish --username=${{ secrets.HACKAGE_USERNAME }} --password=${{ secrets.HACKAGE_PASSWORD }} dist-newstyle/sdist/*.tar.gz
