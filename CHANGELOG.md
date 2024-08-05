@@ -2,42 +2,50 @@
 
 ## unreleased
 
+### Added
+
+- vale to devcontainer configuration and pre-commit checks
+
+### Fixed
+
+- haskell-ci action failures by changing to focal distribution, see [actions/checkout#1809](https://github.com/actions/checkout/issues/1809)
+
 ## 0.1.5.0 -- 2024-06-09
 
 ### Added
 
-* vscode configuration for debugging with cabal
+- vscode configuration for debugging with cabal
 
 ### Removed
 
-* Test GHC 9.4
+- Test GHC 9.4
 
 ## 0.1.4.0 -- 2024-06-01
 
 ### Added
 
-* Test GHC 9.10
-* Support for base 4.20
-* vale linting for documentation
+- Test GHC 9.10
+- Support for base 4.20
+- vale linting for documentation
 
 ### Deprecated
 
-* Test GHC 9.4
+- Test GHC 9.4
 
 ## 0.1.3.0 -- 2024-05-25
 
 ### Added
 
-* --cabal-name option to specify a Cabal friendly name independent from the
+- --cabal-name option to specify a Cabal friendly name independent from the
   repository or other names.
-* Test GHC 9.8.2, 9.8.1, 9.6.4, 9.6.3, 9.6.1, 9.4.8, 9.4.7, 9.4.6, 9.4.4, 9.4.3,
+- Test GHC 9.8.2, 9.8.1, 9.6.4, 9.6.3, 9.6.1, 9.4.8, 9.4.7, 9.4.6, 9.4.4, 9.4.3,
   9.4.2, and 9.4.1
-* Add support for text-2.0.1
-* Add support for Cabal-syntax-3.12.0.0
+- Add support for text-2.0.1
+- Add support for Cabal-syntax-3.12.0.0
 
 ### Changed
 
-* Throw errors upon empty output from git commands
+- Throw errors upon empty output from git commands
 
 ### Deprecated
 
@@ -49,4 +57,4 @@
 
 ## 0.1.0.0 -- YYYY-mm-dd
 
-* First version. Released on an unsuspecting world.
+- First version. Released on an unsuspecting world.
