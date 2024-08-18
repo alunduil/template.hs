@@ -2,6 +2,8 @@
 
 ## unreleased
 
+## 0.1.6.0 -- 2024-08-18
+
 ### Added
 
 - vale to devcontainer configuration and pre-commit checks
