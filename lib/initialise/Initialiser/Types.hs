@@ -6,16 +6,16 @@ module Initialiser.Types
   )
 where
 
-import Configuration (Configuration)
 import Control.Monad.Catch (MonadThrow)
 import Control.Monad.IO.Class (MonadIO)
 import Control.Monad.Logger (LoggingT, MonadLogger, runStderrLoggingT)
 import Control.Monad.Reader (MonadReader, ReaderT, runReaderT)
+import qualified Environment (T)
 
 newtype Initialiser a = Initialiser
-  { run :: LoggingT (ReaderT Configuration IO) a
+  { run :: LoggingT (ReaderT Environment.T IO) a
   }
-  deriving (Applicative, Functor, Monad, MonadIO, MonadLogger, MonadReader Configuration, MonadThrow)
+  deriving (Applicative, Functor, Monad, MonadIO, MonadLogger, MonadReader Environment.T, MonadThrow)
 
-runInitialiser :: Initialiser a -> Configuration -> IO a
+runInitialiser :: Initialiser a -> Environment.T -> IO a
 runInitialiser initialiser = runReaderT (runStderrLoggingT $ run initialiser)

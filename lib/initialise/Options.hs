@@ -2,47 +2,50 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE RecordWildCards #-}
 
-module Configuration
-  ( Configuration (..),
-    parser,
-  )
-where
+module Options (parserInfo) where
 
-import Control.Monad.Logger (LogLevel)
 import Control.Monad.Logger.CallStack (LogLevel (LevelWarn))
-import Data.Text (Text)
-import Data.Time.Calendar (Year)
 import Defaults (Defaults (..), dCabalName, dHomePage, dName)
 import Distribution.SPDX.LicenseId (LicenseId (Unlicense))
-import Network.URI (URI, parseURI)
+import qualified Environment (T (..))
+import Network.URI (parseURI)
 import Options.Applicative
-  ( Parser,
+  ( HasValue,
+    Mod,
+    Parser,
+    ParserInfo,
     auto,
+    fullDesc,
     help,
+    helper,
     hidden,
+    info,
     internal,
     long,
     metavar,
     option,
+    progDesc,
     showDefault,
     strOption,
     value,
+    (<**>),
   )
 import Options.Applicative.Builder (maybeReader)
 
-data Configuration = Configuration
-  { name :: Text,
-    cabalName :: Text,
-    homepage :: URI,
-    author :: Text,
-    maintainer :: Text,
-    licence :: LicenseId,
-    path :: FilePath,
-    year :: Year,
-    verbosity :: LogLevel
-  }
+parserInfo :: Defaults -> ParserInfo Environment.T
+parserInfo ds =
+  info
+    (parser ds <**> helper)
+    ( fullDesc
+        <> progDesc
+          ( unlines
+              [ "Initialise a new project using the current checked out repository.",
+                "WARNING: THIS WILL MODIFY THE CURRENT CONTENTS OF YOUR CHECKED OUT REPOSITORY!"
+              ]
+          )
+    )
 
-parser :: Defaults -> Parser Configuration
+parser :: Defaults -> Parser Environment.T
 parser ds@(Defaults {..}) = do
   name <-
     strOption
@@ -126,8 +129,8 @@ parser ds@(Defaults {..}) = do
           <> showDefault
           <> metavar "VERBOSITY"
       )
-  pure Configuration {..}
-  where
-    -- maybeDefault :: (HasValue f, Show a) => Maybe a -> Mod f a
-    maybeDefault (Just a) = value a <> showDefault
-    maybeDefault Nothing = mempty
+  pure Environment.T {..}
+
+maybeDefault :: (HasValue f, Show a) => Maybe a -> Mod f a
+maybeDefault (Just a) = value a <> showDefault
+maybeDefault Nothing = mempty
