@@ -7,12 +7,12 @@
 
 module Cabal (replace, convert) where
 
-import Configuration (Configuration (..))
-import Control.Monad.Catch (throwM)
+import Control.Monad.Catch (Exception, throwM)
 import Control.Monad.Logger (logInfo)
 import Control.Monad.Reader (MonadReader (ask), asks, liftIO)
 import Data.ByteString (ByteString, append, breakSubstring, concat, readFile, stripPrefix)
-import qualified Data.ByteString.Char8 as BS (pack)
+import qualified Data.ByteString.Char8 as BS (pack, unpack)
+import Data.List.NonEmpty (head, nonEmpty)
 import Data.Text (Text, unlines)
 import qualified Data.Text as T (pack, unpack)
 import Data.Text.Encoding (encodeUtf8)
@@ -30,16 +30,21 @@ import Distribution.Fields
 import Distribution.Fields.Field (fieldLineAnn)
 import Distribution.Parsec.Position (Position)
 import Distribution.SPDX (licenseId)
+import qualified Environment (T (..))
 import Initialiser.Types (Initialiser)
 import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursive, removeFile)
 import System.FilePath (replaceBaseName, (</>))
-import Prelude hiding (concat, readFile, unlines, writeFile)
+import Prelude hiding (concat, head, readFile, unlines, writeFile)
 
 #if __GLASGOW_HASKELL__ < 908
-import Control.Exception (Exception)
 import Text.Parsec.Error (ParseError)
 instance Exception ParseError
 #endif
+
+newtype MissingAnnotationException = MissingAnnotationException Text
+  deriving (Show)
+
+instance Exception MissingAnnotationException
 
 replace :: FilePath -> Initialiser ()
 replace path = do
@@ -51,7 +56,7 @@ replace path = do
 replaceCabal :: FilePath -> Initialiser ()
 replaceCabal path = do
   -- TODO handle in replaceWith
-  path' <- asks (replaceBaseName path . T.unpack . name)
+  path' <- asks (replaceBaseName path . T.unpack . Environment.name)
   $logInfo ("replacing cabal " <> T.pack (show path) <> " with " <> T.pack (show path'))
   -- TODO replaceWith convert
   contents <- liftIO $ readFile path
@@ -67,7 +72,11 @@ convert contents = do
 
 convert' :: Field Position -> Initialiser (Field Position)
 convert' f@(Field n@(Name _ fName) ls) = do
-  Configuration {..} <- asks id
+  Environment.T {..} <- asks id
+  annotation <- case nonEmpty ls of
+    (Just ls') -> pure $ fieldLineAnn (head ls')
+    Nothing -> throwM $ MissingAnnotationException $ "field " <> T.pack (BS.unpack fName) <> " has no annotation"
+  let field s = pure $ Field n [FieldLine annotation s]
   case fName of
     -- package
     "name" -> field (encodeUtf8 cabalName)
@@ -89,11 +98,8 @@ convert' f@(Field n@(Name _ fName) ls) = do
     -- source-repository
     "location" -> field $ BS.pack $ show homepage
     _ -> pure f
-  where
-    field s = pure $ Field n [FieldLine annotation s]
-    annotation = fieldLineAnn . head $ ls
 convert' (Section n arguments fs) = do
-  Configuration {..} <- asks id
+  Environment.T {..} <- asks id
   fs' <- mapM convert' fs
   pure $ Section n (map (convertSectionArgument name) arguments) fs'
 
@@ -117,7 +123,7 @@ convertString r s = case token `stripPrefix` rest of
 -- TODO Move to Initialise module?
 replaceDirectoryWith :: FilePath -> (FilePath -> Initialiser ()) -> Initialiser ()
 replaceDirectoryWith component r = do
-  Configuration {..} <- ask
+  Environment.T {..} <- ask
   let new = component </> T.unpack name
   let original = component </> "initialise"
   $logInfo ("replacing directory " <> T.pack (show original) <> " with " <> T.pack (show new))
@@ -130,7 +136,7 @@ replaceLib _path = pure ()
 
 replaceTest :: FilePath -> Initialiser ()
 replaceTest path = do
-  name' <- asks name
+  name' <- asks Environment.name
   -- TODO Template library.
   liftIO $
     writeFile (path </> "Main.hs") $
@@ -145,7 +151,7 @@ replaceTest path = do
 
 replaceBin :: FilePath -> Initialiser ()
 replaceBin path = do
-  name' <- asks name
+  name' <- asks Environment.name
   -- TODO Template library.(*)
   liftIO $
     writeFile (path </> "Main.hs") $

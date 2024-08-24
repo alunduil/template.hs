@@ -8,12 +8,12 @@ module File
   )
 where
 
-import Configuration (Configuration (..))
 import Control.Monad.Logger (logInfo)
 import Control.Monad.Reader (MonadIO (liftIO), MonadReader (ask))
 import Data.Text (Text, pack)
 import qualified Data.Text as T (replace)
 import Data.Text.IO (readFile, writeFile)
+import qualified Environment (T (..))
 import Initialiser.Types (Initialiser)
 import Prelude hiding (readFile, writeFile)
 
@@ -27,7 +27,7 @@ replace p = do
 
 convert :: Text -> Initialiser Text
 convert contents = do
-  Configuration {..} <- ask
+  Environment.T {..} <- ask
   pure
     . T.replace "templatise" name
     . T.replace "template-hs" name
