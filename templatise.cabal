@@ -78,7 +78,7 @@ library initialise-library
     , http-conduit  ^>=2.3.8.3
     , regex-tdfa    ^>=1.3.2.2
 
-  if impl(ghc <9.8)
+  if impl(ghc <9.4)
     build-depends: parsec ^>=3.1.15.0
 
   hs-source-dirs:   lib/initialise
@@ -96,6 +96,7 @@ test-suite initialise-test
   main-is:          Main.hs
   build-depends:
     , directory           ^>=1.3.6.2
+    , gitlib-libgit2      ^>=3.1.2.1
     , hspec               ^>=2.11.4
     , initialise-library
     , tasty               ^>=1.4.3   || ^>=1.5
@@ -103,6 +104,7 @@ test-suite initialise-test
     , tasty-hspec         ^>=1.2.0.4
     , temporary           ^>=1.3
 
+  --, gitlib              ^>=3.1.3
   other-modules:
     CabalGolden
     DefaultsSpec
