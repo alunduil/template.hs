@@ -2,6 +2,10 @@
 
 ## unreleased
 
+### Added
+
+- Support for Cabal-syntax-3.14.0.0
+
 ## 0.1.6.0 -- 2024-08-18
 
 ### Added
