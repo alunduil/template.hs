@@ -36,7 +36,7 @@ import System.Directory.Extra (createDirectoryIfMissing, removeDirectoryRecursiv
 import System.FilePath (replaceBaseName, (</>))
 import Prelude hiding (concat, head, readFile, unlines, writeFile)
 
-#if __GLASGOW_HASKELL__ < 908
+#if __GLASGOW_HASKELL__ < 904
 import Text.Parsec.Error (ParseError)
 instance Exception ParseError
 #endif
